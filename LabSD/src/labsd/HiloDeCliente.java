@@ -22,14 +22,23 @@ public class HiloDeCliente implements Runnable, ListDataListener {
     private Socket socket;
     private DataInputStream dataInput;
     private DataOutputStream dataOutput;
+
+    private String nombre;
+    private String correo;
+    private String rut;
+    private String clave;
+    private String rol;
+
     public String idserver;
     public boolean connected;
+    public Basededatos db;
 
     public HiloDeCliente(DefaultListModel mensajes, Socket socket) {
         this.idserver = "";
         this.mensajes = mensajes;
         this.socket = socket;
         this.connected = true;
+        this.db = new Basededatos();
 
         try {
             dataInput = new DataInputStream(socket.getInputStream());
