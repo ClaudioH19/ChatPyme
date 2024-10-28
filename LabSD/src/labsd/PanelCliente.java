@@ -13,7 +13,6 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 
-
 public class PanelCliente {
 
     private JScrollPane scroll;
@@ -31,83 +30,85 @@ public class PanelCliente {
     private JButton btnGroupMessage;
     private JButton btnLeaveGroup;
     private JButton btnStatus;
-    private JButton btnHelp;
+    private JButton btnlogin;
 
     public PanelCliente(Container contenedor) {
-        // Colores oscuros estilo Discord
-        Color backgroundDark = new Color(54, 57, 63);
-        Color buttonColor = new Color(88, 101, 242);
-        Color textColor = new Color(220, 221, 222);
-        Color buttonHoverColor = new Color(114, 137, 218);
+        // Colores estilo centro médico
+        Color backgroundWhite = Color.WHITE;
+        Color buttonBlue = new Color(66, 133, 244);       // Azul
+        Color buttonGreen = new Color(102, 187, 106);     // Verde claro
+        Color buttonRed = new Color(244, 67, 54);         // Rojo
+        Color textColor = Color.WHITE;
+        Color hoverBlue = new Color(50, 105, 168);
+        Color hoverGreen = new Color(76, 139, 82);        // Verde oscuro para efecto hover
+        Color hoverRed = new Color(194, 54, 44);
 
         // Establecer el layout y estilo de la interfaz
         contenedor.setLayout(new BorderLayout());
-        contenedor.setBackground(backgroundDark);
+        contenedor.setBackground(backgroundWhite);
 
-        // Área de texto para mensajes (más grande)
+        // Área de texto para mensajes
         textArea = new JTextArea();
-        textArea.setBackground(backgroundDark);
-        textArea.setForeground(textColor);
-        textArea.setFont(new Font("Arial", Font.PLAIN, 18)); // Letra más grande
-        textArea.setEditable(false);  // Desactivar edición en el área de texto
-        textArea.setLineWrap(true);   // Ajustar el texto en varias líneas
+        textArea.setBackground(backgroundWhite);
+        textArea.setForeground(Color.BLACK); // Texto negro en fondo blanco
+        textArea.setFont(new Font("Arial", Font.PLAIN, 18));
+        textArea.setEditable(false);
+        textArea.setLineWrap(true);
         scroll = new JScrollPane(textArea);
-        scroll.setPreferredSize(new Dimension(1200, 600));  // Aumentar el tamaño del panel de mensajes
-        scroll.getViewport().setBackground(backgroundDark);
+        scroll.setPreferredSize(new Dimension(1200, 600));
+        scroll.getViewport().setBackground(backgroundWhite);
 
-        // Parte de entrada de mensaje (más grande)
+        // Parte de entrada de mensaje
         JPanel panel = new JPanel(new BorderLayout());
-        panel.setBackground(backgroundDark);
+        panel.setBackground(backgroundWhite);
 
-        textField = new JTextField(100);  // Aumentar el tamaño del campo de texto
-        textField.setBackground(new Color(64, 68, 75));
-        textField.setForeground(textColor);
-        textField.setFont(new Font("Arial", Font.PLAIN, 20));  // Letra más grande
+        textField = new JTextField(100);
+        textField.setBackground(new Color(230, 230, 230)); // Fondo claro para campo de texto
+        textField.setForeground(Color.BLACK);
+        textField.setFont(new Font("Arial", Font.PLAIN, 20));
 
-        boton = createButton("Enviar", buttonColor, textColor, buttonHoverColor); // Botón más pequeño
-        limpiarBoton = createButton("Limpiar", buttonColor, textColor, buttonHoverColor); // Botón de limpiar
+        boton = createButton("Enviar", buttonGreen, textColor, hoverGreen);
 
         // Panel de comandos con botones reorganizados
-        JPanel panelComandos = new JPanel(new GridLayout(2, 5, 10, 10));  // Ajuste para más botones con más espacio
-        panelComandos.setBackground(backgroundDark);
+        JPanel panelComandos = new JPanel(new GridLayout(2, 5, 10, 10));
+        panelComandos.setBackground(backgroundWhite);
 
         // Inicialización de botones organizados por grupos y funciones
-        // Botones relacionados con grupos
-        btnCreateGroup = createButton("Crear Grupo", buttonColor, textColor, buttonHoverColor);
-        btnJoinGroup = createButton("Unirse Grupo", buttonColor, textColor, buttonHoverColor);
-        btnAllGroups = createButton("Ver Grupos", buttonColor, textColor, buttonHoverColor);
-        btnGroupMessage = createButton("Msg Grupo", buttonColor, textColor, buttonHoverColor);
-        btnLeaveGroup = createButton("Salir Grupo", buttonColor, textColor, buttonHoverColor);
+        btnCreateGroup = createButton("Crear Grupo", buttonBlue, textColor, hoverBlue);
+        btnJoinGroup = createButton("Unirse Grupo", buttonBlue, textColor, hoverBlue);
+        btnAllGroups = createButton("Ver Grupos", buttonBlue, textColor, hoverBlue);
+        btnGroupMessage = createButton("Msg Grupo", buttonBlue, textColor, hoverBlue);
+        btnLeaveGroup = createButton("Salir Grupo", buttonRed, textColor, hoverRed);
 
-        // Botones de estado/información
-        btnPrivate = createButton("Privado", buttonColor, textColor, buttonHoverColor);
-        btnWhoami = createButton("¿Quién soy?", buttonColor, textColor, buttonHoverColor);
-        btnStatus = createButton("Estado Servidor", buttonColor, textColor, buttonHoverColor);
-        btnHelp = createButton("Ayuda", buttonColor, textColor, buttonHoverColor);
+        btnPrivate = createButton("Privado", buttonGreen, textColor, hoverGreen);
+        btnWhoami = createButton("Info. sesión", buttonGreen, textColor, hoverGreen);
+        btnStatus = createButton("Conectados", buttonGreen, textColor, hoverGreen);
+        btnlogin = createButton("Log-in", buttonGreen, textColor, hoverGreen);
+        limpiarBoton = createButton("Limpiar", buttonRed, textColor, hoverRed);
 
         // Agregar botones al panel de comandos en el orden solicitado
-        panelComandos.add(btnCreateGroup);    // Botones relacionados con grupos
+        panelComandos.add(btnCreateGroup);
         panelComandos.add(btnJoinGroup);
         panelComandos.add(btnAllGroups);
         panelComandos.add(btnGroupMessage);
         panelComandos.add(btnLeaveGroup);
 
-        panelComandos.add(btnPrivate);        // Botones de estado/información
+        panelComandos.add(btnPrivate);
         panelComandos.add(btnWhoami);
         panelComandos.add(btnStatus);
-        panelComandos.add(btnHelp);
-        panelComandos.add(limpiarBoton);      // Botón para limpiar la pantalla
+        panelComandos.add(btnlogin);
+        panelComandos.add(limpiarBoton);
 
         // Agregar el panel de comandos y el campo de texto
-        panel.add(textField, BorderLayout.CENTER);  // Campo de texto más grande
-        panel.add(boton, BorderLayout.EAST);  // Botón más pequeño a la derecha
+        panel.add(textField, BorderLayout.CENTER);
+        panel.add(boton, BorderLayout.EAST);
 
         // Contenedor principal
         JPanel contenedorPrincipal = new JPanel(new BorderLayout());
         contenedorPrincipal.add(panel, BorderLayout.NORTH);
         contenedorPrincipal.add(panelComandos, BorderLayout.CENTER);
 
-        contenedor.add(scroll, BorderLayout.CENTER);  // Más espacio para el área de texto
+        contenedor.add(scroll, BorderLayout.CENTER);
         contenedor.add(contenedorPrincipal, BorderLayout.SOUTH);
 
         // Asignar acciones a los botones
@@ -119,31 +120,30 @@ public class PanelCliente {
         btnGroupMessage.addActionListener(e -> addCommandToTextField("/group "));
         btnLeaveGroup.addActionListener(e -> addCommandToTextField("/leave group "));
         btnStatus.addActionListener(e -> simulateEnter("/status"));
-        btnHelp.addActionListener(e -> simulateEnter("/help"));
+        btnlogin.addActionListener(e -> addCommandToTextField("/login"));
 
         // Asignar acción para el botón "Limpiar"
         limpiarBoton.addActionListener(e -> textArea.setText(""));
     }
 
-    // Método auxiliar para crear botones con estilo personalizado (sin redondeo)
-    private JButton createButton(String text, Color bgColor, Color fgColor, Color hoverColor) {
-        JButton button = new JButton(text);
-        button.setForeground(fgColor);
-        button.setFont(new Font("Arial", Font.BOLD, 14));  // Botón con fuente más pequeña
-        button.setFocusPainted(false);
-        button.setPreferredSize(new Dimension(120, 40));  // Botones más pequeños
-        button.setBackground(bgColor);
+        private JButton createButton(String text, Color bgColor, Color fgColor, Color hoverColor) {
+            JButton button = new JButton(text);
+            button.setForeground(fgColor);
+            button.setFont(new Font("Arial", Font.BOLD, 14));
+            button.setFocusPainted(false);
+            button.setPreferredSize(new Dimension(120, 40));
+            button.setBackground(bgColor);
 
-        // Efecto hover (cambia el color cuando el mouse pasa sobre el botón)
-        button.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseEntered(java.awt.event.MouseEvent evt) {
-                button.setBackground(hoverColor);
-            }
+            // Efecto hover (cambia el color a azul claro cuando el mouse pasa sobre el botón)
+            button.addMouseListener(new java.awt.event.MouseAdapter() {
+                public void mouseEntered(java.awt.event.MouseEvent evt) {
+                    button.setBackground(hoverColor);
+                }
 
-            public void mouseExited(java.awt.event.MouseEvent evt) {
-                button.setBackground(bgColor);
-            }
-        });
+                public void mouseExited(java.awt.event.MouseEvent evt) {
+                    button.setBackground(bgColor);
+                }
+            });
 
         return button;
     }
@@ -173,6 +173,6 @@ public class PanelCliente {
     private void simulateEnter(String command) {
         textField.setText(command);
         textField.requestFocus();
-        boton.doClick();  // Simula el Enter
+        boton.doClick();
     }
 }

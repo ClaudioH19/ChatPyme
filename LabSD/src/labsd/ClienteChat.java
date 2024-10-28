@@ -23,6 +23,7 @@ public class ClienteChat {
         try {
             socket = new Socket("localhost", 5000);
             ControlCliente control = new ControlCliente(socket);
+
         } catch (Exception e) {
             e.printStackTrace();
         }

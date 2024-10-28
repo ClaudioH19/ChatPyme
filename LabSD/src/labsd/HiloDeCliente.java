@@ -1,5 +1,7 @@
 package labsd;
 
+import com.mongodb.MongoException;
+
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -22,14 +24,23 @@ public class HiloDeCliente implements Runnable, ListDataListener {
     private Socket socket;
     private DataInputStream dataInput;
     private DataOutputStream dataOutput;
+
+    private String nombre;
+    private String correo;
+    private String rut;
+    private String clave;
+    private String rol;
+
     public String idserver;
     public boolean connected;
+    public Basededatos db;
 
     public HiloDeCliente(DefaultListModel mensajes, Socket socket) {
         this.idserver = "";
         this.mensajes = mensajes;
         this.socket = socket;
         this.connected = true;
+        this.db = new Basededatos();
 
         try {
             dataInput = new DataInputStream(socket.getInputStream());
@@ -43,7 +54,7 @@ public class HiloDeCliente implements Runnable, ListDataListener {
 
     @Override
     public void run() {
-
+        this.reenviarAlmismosocket("USE /login <correo> <clave> PARA INGRESAR.");
         this.idserver = Thread.currentThread().getName();
 
         for (int i = 0; i < HiloDeCliente.conectados.size(); i++) {
@@ -61,7 +72,7 @@ public class HiloDeCliente implements Runnable, ListDataListener {
                 System.out.println("ORIGIN: " + origin);
                 comandos(texto, textsplitted, idDest, origin);
 
-                if (!texto.contains("/")) {
+                if (!texto.contains("/") && validationrol()) {
                     synchronized (mensajes) {
                         mensajes.addElement("PUBLIC FROM " + texto);
                         System.out.println(texto);
@@ -125,9 +136,13 @@ public class HiloDeCliente implements Runnable, ListDataListener {
 
     public void comandos(String texto, String[] textsplitted, String idDest, String origin) throws Throwable {
 
+
         //PRIVATE MSG
         //###############################################################
-        if (texto.contains("/private")) {
+        if (texto.contains("/private") && validationrol()) {
+
+
+
             String auxtext = "";
             for (int i = 0; i < textsplitted.length; i++) {
                 if (textsplitted[i].equals("/private")) {
@@ -155,8 +170,7 @@ public class HiloDeCliente implements Runnable, ListDataListener {
 
             //CREATE GROUP
             //###############################################################
-        } else if (texto.contains("/create group")) {
-
+        } else if (texto.contains("/create group") && validationrol()) {
             for (int i = 0; i < textsplitted.length; i++) {
                 if (textsplitted[i].equals("/create") && textsplitted[i + 1].equals("group")) {
                     ArrayList<String> g = new ArrayList();
@@ -170,7 +184,7 @@ public class HiloDeCliente implements Runnable, ListDataListener {
             }
             //INFO DEL USUARIO
             //###############################################################
-        } else if (texto.contains("/whoami")) {
+        } else if (texto.contains("/whoami") && validationrol()) {
             for (HiloDeCliente h : conectados) {
                 if (h.idserver.equalsIgnoreCase(origin)) {
                     h.reenviarAlmismosocket("CONNECTED AS " + origin + "\n");
@@ -178,7 +192,7 @@ public class HiloDeCliente implements Runnable, ListDataListener {
             }
          //UNIRSE A UN GRUPO
         //###############################################################
-        } else if (texto.contains("/join group")) {
+        } else if (texto.contains("/join group") && validationrol()) {
 
             for (int i = 0; i < textsplitted.length; i++) {
                 if (textsplitted[i].equals("/join") && textsplitted[i + 1].equals("group")) {
@@ -205,7 +219,7 @@ public class HiloDeCliente implements Runnable, ListDataListener {
             }
             // CREAR GRUPO
             //###############################################################
-        } else if (texto.contains("/group")) {
+        } else if (texto.contains("/group") && validationrol()) {
 
             String auxtext = "";
             for (int i = 0; i < textsplitted.length; i++) {
@@ -247,7 +261,7 @@ public class HiloDeCliente implements Runnable, ListDataListener {
             }
             //GUIA DE AYUDA DE COMANDOS
             //###############################################################    
-        } else if (texto.contains("/help")) {
+        } else if (texto.contains("/help") && validationrol()) {
 
             this.reenviarAlmismosocket(""
                     + "/whoami ----------> Muestra el ID del server \n"
@@ -261,7 +275,7 @@ public class HiloDeCliente implements Runnable, ListDataListener {
             );
             // ABANDONAR GRUPO 
             //###############################################################
-        } else if (texto.contains("/leave group")) {
+        } else if (texto.contains("/leave group") && validationrol()) {
 
             for (int i = 0; i < textsplitted.length; i++) {
                 if (textsplitted[i].equals("/leave") && textsplitted[i + 1].equals("group")) {
@@ -285,7 +299,7 @@ public class HiloDeCliente implements Runnable, ListDataListener {
             }
             // LISTAR GRUPOS
             //###############################################################
-        } else if (texto.contains("/allgroups")) {
+        } else if (texto.contains("/allgroups") && validationrol()) {
             this.reenviarAlmismosocket("GRUPOS CREADOS:\n---------------------");
             for (int i = 0; i < groups.size(); i++) {
                 ArrayList auxg = groups.get(i);
@@ -296,12 +310,63 @@ public class HiloDeCliente implements Runnable, ListDataListener {
             }
             //VER CONTECTADOS
             //###############################################################
-        } else if (texto.contains("/status")) {
+        } else if (texto.contains("/status") && validationrol()) {
             this.reenviarAlmismosocket("ONLINE: \n---------------------");
             for (int i = 0; i < conectados.size(); i++) {
                 this.reenviarAlmismosocket("ID: " + conectados.get(i).idserver + " IS CONNECTED\n---------------------");
             }
-        } //EXIT
+        }
+        //LOGUEARSE
+        //###############################################################
+        //formato correo clave
+        else if(texto.contains("/login")){
+                for (int i = 0; i < textsplitted.length; i++) {
+                    if(textsplitted[i].equals("/login")){
+                        String correo=textsplitted[i+1];
+                        String clave=textsplitted[i+2];
+                        String[][] user=db.readuser(correo);
+                        if(user==null){
+                            this.reenviarAlmismosocket("USUARIO NO ENCONTRADO");
+                            return;
+                        }
+
+                        if(!user[3][1].equals(clave)){
+                            this.reenviarAlmismosocket("CONTRASEÑA INCORRECTA");
+                            return;
+                        }
+                        this.nombre=user[0][1];
+                        this.correo=user[1][1];
+                        this.rut=user[2][1];
+                        this.clave=user[3][1];
+                        this.rol=user[4][1];
+                        this.reenviarAlmismosocket("LOGUEADO COMO: "+this.nombre+"|"+this.rol);
+                        break;
+                    }
+
+                }
+
+        }
+        else if(texto.contains("/register")){
+            if(!rol.equals("administrador")){
+                this.reenviarAlmismosocket("SOLO ADMINISTRADORES PUEDEN REGISTRAR");
+                return;
+            }
+            for (int i = 0; i < textsplitted.length; i++) {
+                if (textsplitted[i].equals("/register")) {
+                    String nombre = textsplitted[i + 1];
+                    String correo = textsplitted[i + 2];
+                    String rut = textsplitted[i + 3];
+                    String clave = textsplitted[i + 4];
+                    String rol = textsplitted[i + 5];
+                    try {
+                        db.createuser(nombre, correo, rut, clave, rol);
+                        this.reenviarAlmismosocket("USUARIO "+ nombre +" CREADO");
+                    } catch (MongoException e) {
+                        this.reenviarAlmismosocket(String.valueOf(e));
+                    }
+                }
+            }
+        }//EXIT
         //###############################################################
         else if (texto.contains("/exit")) {
             for (int i = 0; i < conectados.size(); i++) {
@@ -314,4 +379,14 @@ public class HiloDeCliente implements Runnable, ListDataListener {
         }
     }
 
+
+
+    public boolean validationrol(){
+        System.out.println(this.rol);
+        if(this.rol==null || this.rol=="null"){
+            this.reenviarAlmismosocket("NECESITA INGRESAR AL SISTEMA.");
+            return false;
+        }
+        return true;
+    }
 }

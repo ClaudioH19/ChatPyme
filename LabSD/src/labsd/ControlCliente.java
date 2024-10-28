@@ -21,13 +21,22 @@ public class ControlCliente implements ActionListener, Runnable {
     private Thread hilo;
     private String IDserver;
     public boolean connected;
+
+
+    private String nombre;
+    private String correo;
+    private String rut;
+    private String clave;
+    private String rol;
+
+
     JFrame v;
 
     public ControlCliente(Socket socket) {
         this.connected = true;
         //this.panel = panel;
         try {
-
+            this.nombre=this.rol=this.correo=this.rut=this.clave="null";
             dataInput = new DataInputStream(socket.getInputStream());
             dataOutput = new DataOutputStream(socket.getOutputStream());
             IDserver = dataInput.readUTF();
@@ -46,8 +55,8 @@ public class ControlCliente implements ActionListener, Runnable {
 
     @Override
     public void actionPerformed(ActionEvent evento) {
-        try {
-            dataOutput.writeUTF(IDserver + " " + panel.getTexto());
+        try {//los espacios ayudan a parsear el texto por lado del servidor, es util para separar datos del mensaje
+            dataOutput.writeUTF(IDserver + " " + panel.getTexto()+" ");
         } catch (Exception excepcion) {
             excepcion.printStackTrace();
         }
