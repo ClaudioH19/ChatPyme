@@ -56,7 +56,7 @@ public class ControlCliente implements ActionListener, Runnable {
     @Override
     public void actionPerformed(ActionEvent evento) {
         try {//los espacios ayudan a parsear el texto por lado del servidor, es util para separar datos del mensaje
-            dataOutput.writeUTF(rol+" "+nombre+" "+correo+" "+clave+" "+rut+" "+IDserver + " " + panel.getTexto()+" ");
+            dataOutput.writeUTF(IDserver + " " + panel.getTexto()+" ");
         } catch (Exception excepcion) {
             excepcion.printStackTrace();
         }

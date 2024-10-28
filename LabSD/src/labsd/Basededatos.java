@@ -55,9 +55,9 @@ public class Basededatos {
         }
     }
 
-    public String[][] readuser(String r){
+    public String[][] readuser(String c){
         MongoCollection<Document> collection = db.getCollection("users");
-        Document query=collection.find(new Document("rut", r)).first();
+        Document query=collection.find(new Document("correo", c)).first();
         if (query == null) {
             System.out.println("Usuario no encontrado.");
             return null;

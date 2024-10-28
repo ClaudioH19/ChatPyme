@@ -25,25 +25,25 @@ public class ServidorChat {
             HiloDeCliente.groups = new ArrayList();
 
             while (true) {
-            Socket cliente = socketServidor.accept();
+                Socket cliente = socketServidor.accept();
+
+                // Crea un nuevo objeto HiloDeCliente
+                HiloDeCliente hc = new HiloDeCliente(mensajes, cliente);
+
+                // Crea un nuevo hilo con el HiloDeCliente
+                Thread hilo = new Thread(hc);
+
+                DataOutputStream salida = new DataOutputStream(cliente.getOutputStream());
+                salida.writeUTF(hilo.getName()); // Enviar el ID único al cliente conectad
+                // Inicia el hilo antes de asignar su ID
+                hilo.start();
             
-            // Crea un nuevo objeto HiloDeCliente
-            HiloDeCliente hc = new HiloDeCliente(mensajes, cliente);
-            
-            // Crea un nuevo hilo con el HiloDeCliente
-            Thread hilo = new Thread(hc);
-            
-            DataOutputStream salida = new DataOutputStream(cliente.getOutputStream());
-            salida.writeUTF(hilo.getName()); // Enviar el ID único al cliente conectad
-            // Inicia el hilo antes de asignar su ID
-            hilo.start();
             
             
-            
-            // Guardar el HiloDeCliente y enviar el ID al cliente
-            HiloDeCliente.conectados.add(hc);
+                // Guardar el HiloDeCliente y enviar el ID al cliente
+                HiloDeCliente.conectados.add(hc);
                 System.out.println("ENVIANDO: "+String.valueOf(hilo.getName()));
-            //salida.writeUTF(hilo.getName()); // Enviar el ID único al cliente conectado
+                //salida.writeUTF(hilo.getName()); // Enviar el ID único al cliente conectado
         }
 
             }catch (Exception e) {
