@@ -14,11 +14,11 @@ import com.mongodb.MongoClientSettings;
 import com.mongodb.MongoException;
 import com.mongodb.ServerApi;
 import com.mongodb.ServerApiVersion;
-import com.mongodb.client.MongoClient;
-import com.mongodb.client.MongoClients;
-import com.mongodb.client.MongoCollection;
-import com.mongodb.client.MongoDatabase;
+import com.mongodb.client.*;
 import org.bson.Document;
+
+import java.util.ArrayList;
+
 public class Basededatos {
 
     private MongoDatabase db;
@@ -99,7 +99,7 @@ public class Basededatos {
 
     }
 
-    public void updateuser(String nombre, String correo, String rut, String clave, String rol){
+    public void updateuser(String nombre, String correo, String rut, String clave, String rol) {
         deleteuser(rut);
         try {
             MongoCollection<Document> collection = this.db.getCollection("users");
@@ -115,6 +115,20 @@ public class Basededatos {
             System.err.println("Error al insertar usuario: " + e.getMessage());
         }
     }
+
+
+    public ArrayList<String[][]> getallusers(){
+        ArrayList<String[][]> users = new ArrayList <String[][]>();
+        MongoCollection<Document> collection = db.getCollection("users");
+        MongoCursor<Document> cursor = collection.find().iterator();
+        while(cursor.hasNext()){
+            Document user = cursor.next();
+            users.add(readuser(user.get("correo").toString()));
+        }
+
+        return users;
+    }
+
 }
     
 

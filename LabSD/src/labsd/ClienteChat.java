@@ -13,10 +13,12 @@ public class ClienteChat {
     private PanelCliente panel;
 
     public static void main(String[] args) throws Throwable {
-        
-        
+
+
         System.out.println("Iniciando ClienteChat...");
         ClienteChat clienteChat = new ClienteChat();
+        ClienteChat clienteChat1 = new ClienteChat();
+        ClienteChat clienteChat2 = new ClienteChat();
     }
 
     public ClienteChat() throws Throwable {
