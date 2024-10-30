@@ -7,13 +7,17 @@ import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.GridLayout;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
 import javax.swing.JButton;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
+import javax.swing.JOptionPane;
 
 public class PanelCliente {
+
+    Basededatos db = new Basededatos();
 
     private JScrollPane scroll;
     private JTextArea textArea;
@@ -112,7 +116,7 @@ public class PanelCliente {
         contenedor.add(contenedorPrincipal, BorderLayout.SOUTH);
 
         // Asignar acciones a los botones
-        btnPrivate.addActionListener(e -> addCommandToTextField("/private "));
+        btnPrivate.addActionListener(e -> addCommandToTextField("/private"));
         btnWhoami.addActionListener(e -> simulateEnter("/whoami"));
         btnCreateGroup.addActionListener(e -> addCommandToTextField("/create group "));
         btnJoinGroup.addActionListener(e -> addCommandToTextField("/join group "));
