@@ -23,20 +23,12 @@ public class ControlCliente implements ActionListener, Runnable {
     public boolean connected;
 
 
-    private String nombre;
-    private String correo;
-    private String rut;
-    private String clave;
-    private String rol;
-
-
     JFrame v;
 
     public ControlCliente(Socket socket) {
         this.connected = true;
         //this.panel = panel;
         try {
-            this.nombre=this.rol=this.correo=this.rut=this.clave="null";
             dataInput = new DataInputStream(socket.getInputStream());
             dataOutput = new DataOutputStream(socket.getOutputStream());
             IDserver = dataInput.readUTF();
