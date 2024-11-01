@@ -1,6 +1,7 @@
 package labsd;
 
 import javax.swing.*;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
@@ -12,6 +13,7 @@ import java.io.IOException;
 import java.net.Socket;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.lang.reflect.Field;
 
 public class ControlCliente implements ActionListener, Runnable {
 
@@ -59,8 +61,51 @@ public class ControlCliente implements ActionListener, Runnable {
         try {
             while (connected) {
                 String texto = dataInput.readUTF();
-                panel.addTexto(texto);
-                panel.addTexto("\n");
+
+                boolean underline=false;
+                boolean bold=false;
+                boolean italic=false;
+                Color color= Color.BLACK;
+                //parsear texto
+
+                for (int i = 0; i < texto.length(); i++) {
+                    String hex="";
+                    if(texto.charAt(i)=='_'){
+                        underline=!underline;
+                    }
+
+
+                    if(texto.charAt(i)=='~'){
+                        bold=!bold;
+                    }
+
+
+                    if(texto.charAt(i)=='-'){
+                        italic=!italic;
+                    }
+
+                    if(texto.charAt(i)=='#'){
+                        String aux="";
+                        for (i=i+1;i<texto.length() && texto.charAt(i)!='#';i++){
+                            aux+=texto.charAt(i);
+                        }
+                        if(i<texto.length()-1)
+                            i+=1;
+
+                        Field field = Color.class.getField(aux.toUpperCase());
+                        color = (Color) field.get(null);
+                    }
+
+                    // Convertir el color a su valor hexadecimal
+                    hex = String.format("#%06X", color.getRGB() & 0xFFFFFF);
+                    color = Color.decode(hex);
+                    if( (texto.charAt(i)!='-') && (texto.charAt(i)!='~') && (texto.charAt(i)!='_'))
+                        panel.addTexto(texto.charAt(i)+"",bold,italic,underline,color);
+
+
+                }
+
+                panel.addTexto("\n",false,false,false, Color.BLACK);
             }
         } catch (Exception e) {
             e.printStackTrace();

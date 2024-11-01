@@ -6,6 +6,9 @@ import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.GridLayout;
+import javax.swing.*;
+import javax.swing.text.*;
+import java.awt.*;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import javax.swing.JButton;
@@ -13,14 +16,14 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
-import javax.swing.JOptionPane;
+import javax.swing.JTextPane;
 
 public class PanelCliente {
 
     Basededatos db = new Basededatos();
 
     private JScrollPane scroll;
-    private JTextArea textArea;
+    private JTextPane textArea;
     private JTextField textField;
     private JButton boton;
     private JButton limpiarBoton;
@@ -36,6 +39,10 @@ public class PanelCliente {
     private JButton btnStatus;
     private JButton btnlogin;
 
+    private JButton btncolor; // Declaración del botón de color
+    private Color selectedColor = Color.BLACK;
+
+
     public PanelCliente(Container contenedor) {
         // Colores estilo centro médico
         Color backgroundWhite = Color.WHITE;
@@ -47,17 +54,18 @@ public class PanelCliente {
         Color hoverGreen = new Color(76, 139, 82);        // Verde oscuro para efecto hover
         Color hoverRed = new Color(194, 54, 44);
 
+
         // Establecer el layout y estilo de la interfaz
         contenedor.setLayout(new BorderLayout());
         contenedor.setBackground(backgroundWhite);
 
         // Área de texto para mensajes
-        textArea = new JTextArea();
+        textArea = new JTextPane();
         textArea.setBackground(backgroundWhite);
         textArea.setForeground(Color.BLACK); // Texto negro en fondo blanco
         textArea.setFont(new Font("Arial", Font.PLAIN, 18));
         textArea.setEditable(false);
-        textArea.setLineWrap(true);
+        //textArea.setLineWrap(true);
         scroll = new JScrollPane(textArea);
         scroll.setPreferredSize(new Dimension(1200, 600));
         scroll.getViewport().setBackground(backgroundWhite);
@@ -72,6 +80,7 @@ public class PanelCliente {
         textField.setFont(new Font("Arial", Font.PLAIN, 20));
 
         boton = createButton("Enviar", buttonGreen, textColor, hoverGreen);
+
 
         // Panel de comandos con botones reorganizados
         JPanel panelComandos = new JPanel(new GridLayout(2, 5, 10, 10));
@@ -90,6 +99,17 @@ public class PanelCliente {
         btnlogin = createButton("Log-in", buttonGreen, textColor, hoverGreen);
         limpiarBoton = createButton("Limpiar", buttonRed, textColor, hoverRed);
 
+        // Crear el botón de selección de color
+        btncolor = createButton("Color", buttonBlue, textColor, hoverBlue);
+        btncolor.setPreferredSize(new Dimension(80, 40));
+        btncolor.addActionListener(e -> {
+            Color color = JColorChooser.showDialog(null, "Seleccione un color", selectedColor);
+            if (color != null) {
+                selectedColor = color; // Actualiza el color seleccionado
+            }
+        });
+
+
         // Agregar botones al panel de comandos en el orden solicitado
         panelComandos.add(btnCreateGroup);
         panelComandos.add(btnJoinGroup);
@@ -104,6 +124,7 @@ public class PanelCliente {
         panelComandos.add(limpiarBoton);
 
         // Agregar el panel de comandos y el campo de texto
+       // panel.add(btncolor, BorderLayout.WEST); // Botón de color al lado izquierdo
         panel.add(textField, BorderLayout.CENTER);
         panel.add(boton, BorderLayout.EAST);
 
@@ -157,8 +178,22 @@ public class PanelCliente {
         boton.addActionListener(accion);
     }
 
-    public void addTexto(String texto) {
-        textArea.append(texto + "\n");
+    public void addTexto(String texto, boolean bold, boolean italic, boolean underline,Color color) {
+        StyledDocument doc = textArea.getStyledDocument();
+        Style style = textArea.addStyle("Estilo", null);
+
+        // Aplicar estilos según los parámetros
+        StyleConstants.setBold(style, bold);
+        StyleConstants.setItalic(style, italic);
+        StyleConstants.setUnderline(style, underline);
+        StyleConstants.setForeground(style, color);
+
+        try {
+            // Inserta el texto al final del documentor
+            doc.insertString(doc.getLength(), texto, style);
+        } catch (BadLocationException e) {
+            e.printStackTrace();
+        }
     }
 
     public String getTexto() {
