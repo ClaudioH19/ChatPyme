@@ -251,6 +251,9 @@ public class Comandos {
                     this.h.rol=user[4][1];
                     this.h.reenviarAlmismosocket("LOGUEADO COMO: "+this.h.nombre+" <"+this.h.rol+">");
 
+                    // Guardar el HiloDeCliente y enviar el ID al cliente
+                    HiloDeCliente.conectados.add(this.h);
+
                     for (int k = 0; k < HiloDeCliente.conectados.size(); k++) {
                         HiloDeCliente.conectados.get(k).reenviarAlmismosocket(
                                 this.h.nombre+String.format("<%s> ",this.h.rol) + " Connected");

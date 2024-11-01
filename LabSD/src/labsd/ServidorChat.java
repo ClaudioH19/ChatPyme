@@ -37,11 +37,7 @@ public class ServidorChat {
                 salida.writeUTF(hilo.getName()); // Enviar el ID único al cliente conectad
                 // Inicia el hilo antes de asignar su ID
                 hilo.start();
-            
-            
-            
-                // Guardar el HiloDeCliente y enviar el ID al cliente
-                HiloDeCliente.conectados.add(hc);
+
                 System.out.println("ENVIANDO: "+String.valueOf(hilo.getName()));
                 //salida.writeUTF(hilo.getName()); // Enviar el ID único al cliente conectado
         }
