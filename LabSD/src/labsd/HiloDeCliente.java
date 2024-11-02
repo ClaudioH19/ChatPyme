@@ -20,6 +20,7 @@ public class HiloDeCliente implements Runnable, ListDataListener {
 
     static public ArrayList<HiloDeCliente> conectados;
     static public ArrayList<ArrayList> groups;
+    static public ArrayList<String> historial;
     private DefaultListModel mensajes;
     private Socket socket;
     private DataInputStream dataInput;
@@ -37,6 +38,12 @@ public class HiloDeCliente implements Runnable, ListDataListener {
     public Basededatos db;
     public Comandos cmd;
 
+    //estadisticas
+    public long inisesion;
+    public int cantmsg;
+
+
+
     public HiloDeCliente(DefaultListModel mensajes, Socket socket) {
         this.idserver = "";
         this.nombre="";
@@ -50,6 +57,8 @@ public class HiloDeCliente implements Runnable, ListDataListener {
         this.connected = true;
         this.db = new Basededatos();
         this.cmd = new Comandos(this);
+        this.inisesion = 0;
+        this.cantmsg=0;
 
         try {
             dataInput = new DataInputStream(socket.getInputStream());
@@ -63,12 +72,8 @@ public class HiloDeCliente implements Runnable, ListDataListener {
 
     @Override
     public void run() {
-
-
-
-        this.reenviarAlmismosocket("#blue#USE ~/login <correo> <clave>~ PARA INGRESAR.");
+        this.reenviarAlmismosocket("#blue#USE */login <correo> <clave>* PARA INGRESAR.");
         this.idserver = Thread.currentThread().getName();
-
 
         try {
             while (connected) {
@@ -136,6 +141,8 @@ public class HiloDeCliente implements Runnable, ListDataListener {
 
         try {
             dataOutput.writeUTF(mensaje);
+            this.cantmsg++;
+            this.historial.add(mensaje);
         } catch (IOException ex) {
             Logger.getLogger(HiloDeCliente.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -147,6 +154,8 @@ public class HiloDeCliente implements Runnable, ListDataListener {
         String texto = (String) mensajes.getElementAt(e.getIndex0());
         try {
             dataOutput.writeUTF(texto);
+            this.cantmsg++;
+            this.historial.add(texto);
         } catch (Exception excepcion) {
             excepcion.printStackTrace();
         }
