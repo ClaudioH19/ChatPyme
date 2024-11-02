@@ -30,6 +30,7 @@ public class HiloDeCliente implements Runnable, ListDataListener {
     protected String rut;
     protected String clave;
     protected String rol;
+    protected int ingreso;
 
     public String idserver;
     public boolean connected;
@@ -43,6 +44,7 @@ public class HiloDeCliente implements Runnable, ListDataListener {
         this.rut="";
         this.clave="";
         this.rol="";
+        this.ingreso=-1;
         this.mensajes = mensajes;
         this.socket = socket;
         this.connected = true;
@@ -61,7 +63,10 @@ public class HiloDeCliente implements Runnable, ListDataListener {
 
     @Override
     public void run() {
-        this.reenviarAlmismosocket("USE /login <correo> <clave> PARA INGRESAR.");
+
+
+
+        this.reenviarAlmismosocket("#blue#USE ~/login <correo> <clave>~ PARA INGRESAR.");
         this.idserver = Thread.currentThread().getName();
 
 
@@ -93,7 +98,7 @@ public class HiloDeCliente implements Runnable, ListDataListener {
                     synchronized (mensajes) {
                         for(HiloDeCliente h : conectados){
                             if(h.rol.equals(this.rol)){
-                                h.reenviarAlmismosocket(String.format("[PUBLIC FOR <%s> %s]: %s",this.rol,this.nombre,textosinid));
+                                h.reenviarAlmismosocket(String.format("#blue#[PUBLIC FOR <%s> %s]:#black# %s",this.rol,this.nombre,textosinid));
                             }
 
                         }
