@@ -22,7 +22,7 @@ public class ServidorChat {
         try {
             ServerSocket socketServidor = new ServerSocket(5000);
             HiloDeCliente.conectados = new ArrayList();
-            HiloDeCliente.groups = new ArrayList();
+            HiloDeCliente.groups = new ArrayList<ArrayList>();
 
             while (true) {
                 Socket cliente = socketServidor.accept();
@@ -37,6 +37,10 @@ public class ServidorChat {
                 salida.writeUTF(hilo.getName()); // Enviar el ID único al cliente conectad
                 // Inicia el hilo antes de asignar su ID
                 hilo.start();
+
+                //inicia el clock
+                Clock clock = new Clock();
+                clock.start();
 
                 System.out.println("ENVIANDO: "+String.valueOf(hilo.getName()));
                 //salida.writeUTF(hilo.getName()); // Enviar el ID único al cliente conectado

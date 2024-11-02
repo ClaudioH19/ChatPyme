@@ -7,7 +7,7 @@ import java.util.ArrayList;
 public class Comandos {
 
     HiloDeCliente h;
-    ArrayList<String[][]> users;
+    public static ArrayList<String[][]> users;
     public Comandos(HiloDeCliente h) {
         this.h = h;
     }
@@ -63,12 +63,14 @@ public class Comandos {
         } else if (texto.contains("/create group") && validationrol()) {
             for (int i = 0; i < textsplitted.length; i++) {
                 if (textsplitted[i].equals("/create") && textsplitted[i + 1].equals("group")) {
-                    ArrayList<String> g = new ArrayList();
-                    g.add(textsplitted[i + 2]);
-                    g.add(origin);
 
-                    HiloDeCliente.groups.add(g);
+                    //guardar en MONGO
+                    ArrayList<String> integrantes= new ArrayList();
+                    integrantes.add(this.h.correo);
+                    this.h.db.creategroup(textsplitted[i + 2],integrantes);
+
                     this.h.reenviarAlmismosocket("#green#GRUPO " + textsplitted[i + 2] + " CREADO\n");
+                    HiloDeCliente.groups= this.h.db.getallgroups();
                 }
 
             }
@@ -87,27 +89,26 @@ public class Comandos {
             for (int i = 0; i < textsplitted.length; i++) {
                 if (textsplitted[i].equals("/join") && textsplitted[i + 1].equals("group")) {
 
-                    for (int j = 0; j < HiloDeCliente.groups.size(); j++) {
-                        ArrayList auxg = HiloDeCliente.groups.get(j);
-                        if (auxg.get(0).equals(textsplitted[i + 2])) {
-                            auxg.add(this.h.idserver);
 
+                    ArrayList<String >integrantes = this.h.db.getintegrantes(textsplitted[i + 2]);
+                    //UNIRSE EN MONGO
+                     this.h.db.insertuser(textsplitted[i + 2],this.h.correo);
 
-                            //reenviar a todos los del grupo
-                            for (int k = 0; k < auxg.size(); k++) {
-                                for (int l = 0; l < HiloDeCliente.conectados.size(); l++) {
-                                    if(HiloDeCliente.conectados.get(l).idserver.equalsIgnoreCase(String.valueOf(auxg.get(k))))
-                                        HiloDeCliente.conectados.get(l).reenviarAlmismosocket("#green#"+this.h.nombre +" SE HA UNIDO AL GRUPO " + auxg.get(0));
+                     //reenviar a todos los del grupo
+                        for (int k = 0; k < integrantes.size(); k++) {
+                            for (HiloDeCliente h : HiloDeCliente.conectados) {
+                                if(h.correo.equalsIgnoreCase(integrantes.get(k)))
+                                        h.reenviarAlmismosocket("#green#"+this.h.nombre +" SE HA UNIDO AL GRUPO " + textsplitted[i+2]);
                                 }
                             }
-                            //this.reenviarAlmismosocket("UNIDO A GRUPO " + auxg.get(0));
+                            this.h.reenviarAlmismosocket("#green#UNIDO A GRUPO " + textsplitted[i+2]);
+                            HiloDeCliente.groups= this.h.db.getallgroups();
                             break;
-                        }
-                    }
+
                 }
 
             }
-            // CREAR GRUPO
+            // MENSAJE GRUPO
             //###############################################################
         } else if (texto.contains("/group") && validationrol()) {
 
@@ -120,15 +121,15 @@ public class Comandos {
                         auxtext += " " + textsplitted[j];
                     }
 
-                    for (int j = 0; j < HiloDeCliente.groups.size(); j++) {
-                        ArrayList auxg = HiloDeCliente.groups.get(j);
-                        if (auxg.get(0).equals(textsplitted[i + 1])) {
+
+                    ArrayList<String> integrantes = this.h.db.getintegrantes(textsplitted[i + 1]);
+
 
                             boolean entrar = false;
 
                             //validar que existe en ese grupo
-                            for (int k = 1; k < auxg.size(); k++) {
-                                if (origin.equals(String.valueOf(auxg.get(k)))) {
+                            for (int k = 0; k < integrantes.size(); k++) {
+                                if (this.h.correo.equals(integrantes.get(k))) {
                                     entrar = true;
                                     break;
                                 }
@@ -141,25 +142,37 @@ public class Comandos {
                                 }
                             }
 
+                            //guardar mensaje en MONGO
+                            this.h.db.insertmsg(textsplitted[i + 1],"#blue#[FROM GROUP ~" + textsplitted[i + 1] + "~ BY ~" + origin + "~]: " +"#black#"+auxtext);
 
-                            for (int k = 1; entrar && k < auxg.size(); k++) {
+                            for (int k = 0; entrar && k < integrantes.size(); k++) {
                                 for (HiloDeCliente h : HiloDeCliente.conectados) {
-                                    if (h.idserver.equalsIgnoreCase(String.valueOf(auxg.get(k)))) {
+                                    if (h.correo.equalsIgnoreCase(integrantes.get(k))) {
                                         h.reenviarAlmismosocket("#blue#[FROM GROUP ~" + textsplitted[i + 1] + "~ BY ~" + origin + "~]: " +"#black#"+auxtext);
                                     }
                                 }
                             }
+                            ArrayList<String> mensajes= this.h.db.getmensajes(textsplitted[i + 1]);
+                            if(!mensajes.isEmpty()){
+                                this.h.reenviarAlmismosocket("#orange#Use ~/msgs <group>~ para ver los mensajes del grupo");
+                            }
                             break;
-                        }
-
-                    }
-
                 }
 
             }
-            //GUIA DE AYUDA DE COMANDOS
-            //###############################################################
-        } else if (texto.contains("/help") && validationrol()) {
+            //cargar mensajes del grupo
+        } else if(texto.contains("/msgs") && validationrol()) {
+            for (int i=0; i<textsplitted.length; i++) {
+                if (textsplitted[i].equals("/msgs")) {
+                    ArrayList<String> mensajes= this.h.db.getmensajes(textsplitted[i + 1]);
+                    for (String s : mensajes) {
+                        this.h.reenviarAlmismosocket(s);
+                    }
+                }
+            }
+        }//GUIA DE AYUDA DE COMANDOS
+        //###############################################################
+        else if (texto.contains("/help") && validationrol()) {
 
             this.h.reenviarAlmismosocket(""
                     + "/whoami ----------> Muestra el ID del server \n"
@@ -178,43 +191,35 @@ public class Comandos {
             for (int i = 0; i < textsplitted.length; i++) {
                 if (textsplitted[i].equals("/leave") && textsplitted[i + 1].equals("group")) {
 
-                    for (int j = 0; j < HiloDeCliente.groups.size(); j++) {
-                        ArrayList auxg = HiloDeCliente.groups.get(j);
-                        if (auxg.get(0).equals(textsplitted[i + 2])) {
+                    ArrayList<String> integrantes = this.h.db.getintegrantes(textsplitted[i + 2]);
 
-                            for (int k = 1; k < auxg.size(); k++) {
-                                if (this.h.idserver.equalsIgnoreCase(String.valueOf(auxg.get(k)))) {
-                                    this.h.reenviarAlmismosocket("#red#GRUPO " + textsplitted[i + 2] + " ABANDONADO\n");
-                                    auxg.remove(k);
-                                    break;
-                                }
-                            }
 
+                    for (int k = 0; k < integrantes.size(); k++) {
+                        if (this.h.correo.equalsIgnoreCase(integrantes.get(k))) {
+                            this.h.reenviarAlmismosocket("#red#GRUPO " + textsplitted[i + 2] + " ABANDONADO\n");
+                            integrantes.remove(k);
+                            this.h.db.deleteusergroup(textsplitted[i + 2],this.h.correo);
+                            break;
                         }
                     }
                 }
 
             }
+            HiloDeCliente.groups= this.h.db.getallgroups();
             // LISTAR GRUPOS
             //###############################################################
         } else if (texto.contains("/allgroups") && validationrol()) {
             this.h.reenviarAlmismosocket("#blue#~GRUPOS CREADOS~:\n---------------------");
-            for (int i = 0; i < HiloDeCliente.groups.size(); i++) {
-                ArrayList auxg = HiloDeCliente.groups.get(i);
-                this.h.reenviarAlmismosocket("#blue#~NOMBRE GRUPO:~ " + auxg.get(0) + "\n~ Integrantes:~");
+            ArrayList<ArrayList> grupos = this.h.db.getallgroups();
+            for (int i = 0; i < grupos.size(); i++) {
 
+                System.out.println(grupos.get(i));
 
-                for (int j = 1; j < auxg.size(); j++) {
+                this.h.reenviarAlmismosocket("#blue#~NOMBRE GRUPO:~ " + grupos.get(i).get(0) + "\n~ Integrantes:~");
 
-                    String nombre="";
-                    //obtener nombre
-                    for(HiloDeCliente h : HiloDeCliente.conectados) {
-                        if(h.idserver.equalsIgnoreCase(String.valueOf(auxg.get(j)))) {
-                            nombre=h.nombre;
-                        }
-                    }
-
-                    this.h.reenviarAlmismosocket("  >#blue#" + nombre + "\n\n");
+                ArrayList<String> integrantes = (ArrayList<String>) grupos.get(i).get(1);
+                for (int j = 0; j < integrantes.size(); j++){
+                    this.h.reenviarAlmismosocket("  >#blue#" + integrantes.get(j) + "\n\n");
                 }
             }
             //VER CONTECTADOS
@@ -302,7 +307,7 @@ public class Comandos {
                     this.h.reenviarAlmismosocket("#BLUE# ~CONTRASEÑA MODIFICADA~");
                 }
             }
-        }else if(texto.contains("/read")){
+        }else if(texto.contains("/read") && validationrol()){
             this.h.reenviarAlmismosocket("#orange#~leyendo...~");
             ArrayList mensajes = this.h.db.getchat(this.h.correo);
             for (int i = 0; i < mensajes.size(); i++) {
