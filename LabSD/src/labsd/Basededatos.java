@@ -26,7 +26,7 @@ public class Basededatos {
     private MongoDatabase db;
     private MongoClient mongoClient;
 
-    public Basededatos(){
+    public Basededatos() {
         String connectionString = "mongodb+srv://user:Password@dbchatpyme.pzrvj.mongodb.net/?retryWrites=true&w=majority&appName=DBchatpyme";
         ConnectionString connString = new ConnectionString(connectionString);
 
@@ -41,19 +41,19 @@ public class Basededatos {
     }
 
     // CRUD users,
-    public void createuser(String nombre, String correo, String rut, String clave, String rol){
+    public void createuser(String nombre, String correo, String rut, String clave, String rol) {
         try {
             MongoCollection<Document> collection = this.db.getCollection("users");
-            int ingreso=0;
+            int ingreso = 0;
             Document newUser = new Document()
                     .append("nombre", nombre)
                     .append("correo", correo)
                     .append("rut", rut)
                     .append("clave", clave)
                     .append("rol", rol)
-                    .append("ingreso",ingreso)
+                    .append("ingreso", ingreso)
                     .append("chats", new ArrayList<>())
-                    .append("status",false);
+                    .append("status", false);
 
             collection.insertOne(newUser);
             System.out.println("Usuario creado correctamente.");
@@ -62,9 +62,9 @@ public class Basededatos {
         }
     }
 
-    public String[][] readuser(String c){
+    public String[][] readuser(String c) {
         MongoCollection<Document> collection = db.getCollection("users");
-        Document query=collection.find(new Document("correo", c)).first();
+        Document query = collection.find(new Document("correo", c)).first();
         if (query == null) {
             System.out.println("Usuario no encontrado.");
             return null;
@@ -93,73 +93,73 @@ public class Basededatos {
         return user;
     }
 
-    public void deleteuser(String c){
-        try{
+    public void deleteuser(String c) {
+        try {
             MongoCollection<Document> collection = db.getCollection("users");
-            if(collection.find(new Document("correo", c)).first() == null){
+            if (collection.find(new Document("correo", c)).first() == null) {
                 System.out.println("Usuario no encontrado");
                 return;
             }
 
             collection.deleteOne(new Document("correo", c));
             System.out.println("Usuario eliminado correctamente.");
-        }catch (MongoException e){
+        } catch (MongoException e) {
             System.out.println(e);
         }
 
     }
 
-    public void updateuser(String c,String parametros,String key) {
+    public void updateuser(String c, String parametros, String key) {
         try {
             MongoCollection collection = db.getCollection("users");
-            collection.findOneAndUpdate(new Document("correo",c), Updates.set(parametros,key));
+            collection.findOneAndUpdate(new Document("correo", c), Updates.set(parametros, key));
             System.out.println("Usuario actualizado correctamente.");
         } catch (MongoException e) {
             System.err.println("Error al insertar usuario: " + e.getMessage());
         }
     }
 
-    public ArrayList getchat(String c){
+    public ArrayList getchat(String c) {
         MongoCollection<Document> collection = this.db.getCollection("users");
-        Document query=collection.find(new Document("correo", c)).first();
+        Document query = collection.find(new Document("correo", c)).first();
         return query.get("chats", ArrayList.class);
     }
 
-    public void addmensajes(String c,String msg){
+    public void addmensajes(String c, String msg) {
         MongoCollection<Document> collection = this.db.getCollection("users");
-        collection.updateOne(new Document("correo", c), Updates.push("chats",msg));
+        collection.updateOne(new Document("correo", c), Updates.push("chats", msg));
     }
 
-    public void dropmensajes(String c){
+    public void dropmensajes(String c) {
         MongoCollection<Document> collection = this.db.getCollection("users");
         collection.updateOne(new Document("correo", c), Updates.set("chats", new ArrayList<>()));
     }
 
-    public void changestatus(String c,boolean estado){
+    public void changestatus(String c, boolean estado) {
         MongoCollection<Document> collection = this.db.getCollection("users");
-        collection.updateOne(new Document("correo",c),Updates.set("status",estado));
+        collection.updateOne(new Document("correo", c), Updates.set("status", estado));
     }
 
-    public boolean readstatus(String c){
+    public boolean readstatus(String c) {
         MongoCollection<Document> collection = this.db.getCollection("users");
         return Objects.requireNonNull(collection.find(new Document("correo", c)).first()).getBoolean("status");
     }
 
-    public int readingreso(String c){
+    public int readingreso(String c) {
         MongoCollection<Document> collection = this.db.getCollection("users");
-        return collection.find(new Document("correo",c)).first().getInteger(("ingreso"));
+        return collection.find(new Document("correo", c)).first().getInteger(("ingreso"));
     }
 
-    public void incrementingreso(String c){
+    public void incrementingreso(String c) {
         MongoCollection<Document> collection = this.db.getCollection("users");
-        collection.findOneAndUpdate(new Document("correo",c),Updates.inc("ingreso",1));
+        collection.findOneAndUpdate(new Document("correo", c), Updates.inc("ingreso", 1));
     }
 
-    public ArrayList<String[][]> getallusers(){
-        ArrayList<String[][]> users = new ArrayList <String[][]>();
+    public ArrayList<String[][]> getallusers() {
+        ArrayList<String[][]> users = new ArrayList<String[][]>();
         MongoCollection<Document> collection = db.getCollection("users");
         MongoCursor<Document> cursor = collection.find().iterator();
-        while(cursor.hasNext()){
+        while (cursor.hasNext()) {
             Document user = cursor.next();
             users.add(readuser(user.get("correo").toString()));
         }
@@ -169,43 +169,78 @@ public class Basededatos {
 
 
     //CRUD groups
-    public void creategroup(String nombre, ArrayList<String> Integrantes){
-        try{
+    public void creategroup(String nombre, ArrayList<String> Integrantes) {
+        try {
             MongoCollection<Document> collection = db.getCollection("groups");
             ArrayList<String> mensajes = new ArrayList<>();
             Document newGroup = new Document()
                     .append("nombre", nombre)
                     .append("integrantes", Integrantes)
-                    .append("mensajes",mensajes);
-        }catch (MongoException e){
+                    .append("mensajes", mensajes);
+            collection.insertOne(newGroup);
+        } catch (MongoException e) {
             System.err.println("Error al insertar group: " + e.getMessage());
         }
     }
 
-    public void deletegroup(String g){
-            MongoCollection<Document> collection = db.getCollection("groups");
-            collection.deleteOne(new Document("nombre", g));
-    }
-
-    public void insertmsg(String nombre, String mensaje){
+    public void deletegroup(String g) {
         MongoCollection<Document> collection = db.getCollection("groups");
-        collection.updateOne(new Document("nombre", nombre), Updates.push("mensajes",mensaje));
+        collection.deleteOne(new Document("nombre", g));
     }
 
-    public void insertuser(String nombre, String user){
+    public void insertmsg(String nombre, String mensaje) {
         MongoCollection<Document> collection = db.getCollection("groups");
-        collection.updateOne(new Document("nombre", nombre), Updates.push("integrantes",user));
+        collection.updateOne(new Document("nombre", nombre), Updates.push("mensajes", mensaje));
     }
 
-    public void deleteuser(String nombre, String user){
+    public void insertuser(String nombre, String user) {
         MongoCollection<Document> collection = db.getCollection("groups");
-        collection.updateOne(new Document("nombre", nombre), Updates.push("integrantes",user));
+        collection.updateOne(new Document("nombre", nombre), Updates.push("integrantes", user));
     }
 
-    public void deletemsg(String nombre){
+    public void deleteusergroup(String nombre, String user) {
+        MongoCollection<Document> collection = db.getCollection("groups");
+        collection.updateOne(new Document("nombre", nombre), Updates.pull("integrantes", user));
+    }
+
+    public void deletemsg(String nombre) {
         MongoCollection<Document> collection = db.getCollection("groups");
         collection.updateOne(new Document("nombre", nombre), Updates.popLast("mensajes"));
     }
+
+
+    public ArrayList getintegrantes(String nombre) {
+        MongoCollection<Document> collection = db.getCollection("groups");
+        return (ArrayList) collection.find(new Document("nombre", nombre)).first().get("integrantes");
+    }
+
+    public ArrayList getmensajes(String nombre){
+        MongoCollection<Document> collection = db.getCollection("groups");
+        return (ArrayList) collection.find(new Document("nombre",nombre)).first().get("mensajes");
+    }
+
+
+    public ArrayList<ArrayList> getallgroups(){
+        MongoCollection<Document> collection = db.getCollection("groups");
+        FindIterable<Document> groups = collection.find();
+
+        ArrayList<ArrayList> allgroups = new ArrayList();
+        ArrayList groupsList = new ArrayList();
+
+        // Recorrer y mostrar cada grupo
+        for (Document group : groups) {
+            groupsList.add(group.get("nombre"));
+            groupsList.add(group.get("integrantes"));
+            groupsList.add(group.get("mensajes"));
+            allgroups.add(groupsList);
+            groupsList=new ArrayList();
+        }
+
+        return allgroups;
+
+
+    }
+
 
 
 
