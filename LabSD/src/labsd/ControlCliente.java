@@ -67,7 +67,7 @@ public class ControlCliente implements ActionListener, Runnable {
                 boolean italic=false;
                 Color color= Color.BLACK;
                 //parsear texto
-
+                System.out.println(texto);
                 for (int i = 0; i < texto.length(); i++) {
                     String hex="";
                     if(texto.charAt(i)=='_'){
@@ -91,10 +91,9 @@ public class ControlCliente implements ActionListener, Runnable {
                         }
                         if(i<texto.length()-1)
                             i+=1;
-
                         Field field = Color.class.getField(aux.toUpperCase());
                         color = (Color) field.get(null);
-                    }
+                        }
 
                     // Convertir el color a su valor hexadecimal
                     hex = String.format("#%06X", color.getRGB() & 0xFFFFFF);
