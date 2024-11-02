@@ -75,12 +75,12 @@ public class ControlCliente implements ActionListener, Runnable {
                     }
 
 
-                    if(texto.charAt(i)=='~'){
+                    if(texto.charAt(i)=='*'){
                         bold=!bold;
                     }
 
 
-                    if(texto.charAt(i)=='-'){
+                    if(texto.charAt(i)=='~'){
                         italic=!italic;
                     }
 
@@ -98,7 +98,7 @@ public class ControlCliente implements ActionListener, Runnable {
                     // Convertir el color a su valor hexadecimal
                     hex = String.format("#%06X", color.getRGB() & 0xFFFFFF);
                     color = Color.decode(hex);
-                    if( (texto.charAt(i)!='-') && (texto.charAt(i)!='~') && (texto.charAt(i)!='_'))
+                    if( (texto.charAt(i)!='*') && (texto.charAt(i)!='~') && (texto.charAt(i)!='_'))
                         panel.addTexto(texto.charAt(i)+"",bold,italic,underline,color);
 
 
@@ -129,7 +129,6 @@ public class ControlCliente implements ActionListener, Runnable {
                     Logger.getLogger(ControlCliente.class.getName()).log(Level.SEVERE, null, ex);
                 } finally {
                     connected = false;
-
                     v.dispose();
                 }
             }

@@ -17,6 +17,7 @@ import com.mongodb.ServerApiVersion;
 import com.mongodb.client.*;
 import com.mongodb.client.model.Updates;
 import org.bson.Document;
+import com.google.gson.Gson;
 
 import java.util.ArrayList;
 import java.util.*;
@@ -239,6 +240,24 @@ public class Basededatos {
         return allgroups;
 
 
+    }
+
+
+    public Map<String, String> getCollectionsAsJson() {
+        Map<String, String> collectionsJson = new HashMap<>();
+        Gson gson = new Gson();
+
+        // Obtener la colección "users" y convertirla a JSON
+        MongoCollection<Document> usersCollection = db.getCollection("users");
+        List<Document> usersList = usersCollection.find().into(new ArrayList<>());
+        collectionsJson.put("users", gson.toJson(usersList));
+
+        // Obtener la colección "groups" y convertirla a JSON
+        MongoCollection<Document> groupsCollection = db.getCollection("groups");
+        List<Document> groupsList = groupsCollection.find().into(new ArrayList<>());
+        collectionsJson.put("groups", gson.toJson(groupsList));
+
+        return collectionsJson;
     }
 
 

@@ -19,6 +19,8 @@ public class ClienteChat {
         ClienteChat clienteChat = new ClienteChat();
         ClienteChat clienteChat1 = new ClienteChat();
         ClienteChat clienteChat2 = new ClienteChat();
+        ClienteChat clienteChat3 = new ClienteChat();
+        ClienteChat clienteChat4 = new ClienteChat();
     }
 
     public ClienteChat() throws Throwable {
