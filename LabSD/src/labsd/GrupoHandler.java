@@ -15,7 +15,7 @@ public class GrupoHandler {
                 ArrayList<String> integrantes = new ArrayList<>();
                 integrantes.add(this.h.correo);
                 this.h.db.creategroup(textsplitted[i + 2], integrantes);
-                this.h.reenviarAlmismosocket("#green#GRUPO " + textsplitted[i + 2] + " CREADO\n");
+                this.h.reenviarAlmismosocket("*#magenta#Grupo " + textsplitted[i + 2] + " creado\n");
                 HiloDeCliente.groups = this.h.db.getallgroups();
                 break;
             }
@@ -30,11 +30,11 @@ public class GrupoHandler {
                 for (String integrante : integrantes) {
                     for (HiloDeCliente h : HiloDeCliente.conectados) {
                         if (h.correo.equalsIgnoreCase(integrante)) {
-                            h.reenviarAlmismosocket("*#green#" + this.h.nombre + " SE HA UNIDO AL GRUPO " + textsplitted[i + 2]);
+                            h.reenviarAlmismosocket("*#green#" + this.h.nombre + " Se ha unido al grupo: " + textsplitted[i + 2]);
                         }
                     }
                 }
-                this.h.reenviarAlmismosocket("*#green#UNIDO A GRUPO " + textsplitted[i + 2]);
+                this.h.reenviarAlmismosocket("*#green#Unido al grupo: " + textsplitted[i + 2]);
                 HiloDeCliente.groups = this.h.db.getallgroups();
                 break;
             }
@@ -73,11 +73,11 @@ public class GrupoHandler {
                         origin = h.nombre;
                     }
                 }
-                this.h.db.insertmsg(textsplitted[i + 1], "#blue#[FROM GROUP *" + textsplitted[i + 1] + "* BY *" + origin + "*]: " + "#black#" + auxtext);
+                this.h.db.insertmsg(textsplitted[i + 1], "*#magenta#[FROM GROUP " + textsplitted[i + 1] + " BY " + origin + "]:* " + "#black#" + auxtext);
                 for (String integrante : integrantes) {
                     for (HiloDeCliente h : HiloDeCliente.conectados) {
                         if (h.correo.equalsIgnoreCase(integrante)) {
-                            h.reenviarAlmismosocket("#blue#[FROM GROUP *" + textsplitted[i + 1] + "* BY *" + origin + "*]: " + "#black#" + auxtext);
+                            h.reenviarAlmismosocket("*#magenta#[FROM GROUP " + textsplitted[i + 1] + " BY " + origin + "]:* " + "#black#" + auxtext);
                         }
                     }
                 }
@@ -91,13 +91,24 @@ public class GrupoHandler {
     }
 
     public void mostrarTodosLosGrupos() {
-        this.h.reenviarAlmismosocket("#blue#*GRUPOS CREADOS:*\n---------------------");
+        this.h.reenviarAlmismosocket("#magenta#*Grupos Creados:*\n---------------------");
         ArrayList<ArrayList> grupos = this.h.db.getallgroups();
         for (ArrayList grupo : grupos) {
-            this.h.reenviarAlmismosocket("#blue#*NOMBRE GRUPO:* " + grupo.get(0) + "\n* Integrantes:*");
+            this.h.reenviarAlmismosocket("*#magenta#Nombre Grupo:* " + grupo.get(0) + "\n* Integrantes:*");
             ArrayList<String> integrantes = (ArrayList<String>) grupo.get(1);
             for (String integrante : integrantes) {
-                this.h.reenviarAlmismosocket("  >#blue#" + integrante + "\n");
+                this.h.reenviarAlmismosocket("  *#magenta# >" + integrante + "\n");
+            }
+        }
+    }
+
+    public void cargarmsggroup(String[] textsplitted){
+        for (int i=0; i<textsplitted.length; i++) {
+            if (textsplitted[i].equals("/msgs")) {
+                ArrayList<String> mensajes = this.h.db.getmensajes(textsplitted[i + 1]);
+                for (String s : mensajes) {
+                    this.h.reenviarAlmismosocket(s);
+                }
             }
         }
     }

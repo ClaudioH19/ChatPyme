@@ -11,24 +11,24 @@ public class SistemaHandler {
 
     public void mostrarAyuda() {
         h.reenviarAlmismosocket(
-                "\nComandos disponibles:\n" +
-                        "/whoami ----------> Muestra la información de sesión\n" +
-                        "/private  --------> Envía un mensaje privado al ID \n" +
-                        "/allgroups --------> Muestra todos los grupos creados\n" +
-                        "/group  ----------> Envía un mensaje en el grupo \n" +
-                        "/create group  --> Crea un grupo con el nombre \n" +
-                        "/join group  -----> Se une al grupo de nombre \n" +
-                        "/leave group  ---> Se sale del grupo de nombre \n" +
-                        "/status ------------> Muestra el estado del servidor\n" +
-                        "/login -------------> Inicia sesión con correo y clave\n" +
-                        "/newpassword <clave> --> Cambia la contraseña\n" +
-                        "/read --------------> Lee mensajes pendientes\n" +
-                        "/register ----------> Registra un nuevo usuario (solo administradores)\n" +
-                        "/admin -------------> Enviar mensaje a roles administrativos\n" +
-                        "/aux ---------------> Enviar mensaje a auxiliares\n" +
-                        "/urgency -----------> Enviar mensaje de emergencia (solo administradores)\n" +
-                        "/stats -------------> Muestra estadísticas de usuarios conectados (solo administradores)\n" +
-                        "/exit --------------> Desconecta al cliente\n"
+                "#magenta#\n*_Comandos disponibles:_*\n" +
+                        "*/whoami* ----------> Muestra la información de sesión\n" +
+                        "*/private*  --------> Envía un mensaje privado al ID \n" +
+                        "*/allgroups* --------> Muestra todos los grupos creados\n" +
+                        "*/group*  ----------> Envía un mensaje en el grupo \n" +
+                        "*/create group*  --> Crea un grupo con el nombre \n" +
+                        "*/join group*  -----> Se une al grupo de nombre \n" +
+                        "*/leave group*  ---> Se sale del grupo de nombre \n" +
+                        "*/status* ------------> Muestra el estado del servidor\n" +
+                        "*/login* -------------> Inicia sesión con correo y clave\n" +
+                        "*/newpassword <clave>* --> Cambia la contraseña\n" +
+                        "*/read* --------------> Lee mensajes pendientes\n" +
+                        "*/register* ----------> Registra un nuevo usuario (solo administradores)\n" +
+                        "*/admin* -------------> Enviar mensaje a roles administrativos\n" +
+                        "*/aux* ---------------> Enviar mensaje a auxiliares\n" +
+                        "*/urgency* -----------> Enviar mensaje de emergencia (solo administradores)\n" +
+                        "*/stats* -------------> Muestra estadísticas de usuarios conectados (solo administradores)\n" +
+                        "*/exit* --------------> Desconecta al cliente\n"
         );
     }
 
@@ -47,12 +47,12 @@ public class SistemaHandler {
                 }
             }
 
-            h.reenviarAlmismosocket(String.format("#blue#User: %s %s <%s> IS #green#CONNECTED\n---------------------", nombre, correo, rol));
+            h.reenviarAlmismosocket(String.format("#magenta#User: %s %s <%s> is now #green#connected\n---------------------", nombre, correo, rol));
         }
     }
 
     public void enviarMensajeAAdministradores(String texto, String[] textsplitted) {
-        if (!h.rol.equals("medico")) return;
+        if (!h.rol.equals("médico")) return;
 
         String auxtext = "";
         for (int i = 0; i < textsplitted.length; i++) {
@@ -65,19 +65,19 @@ public class SistemaHandler {
 
         ArrayList<String[][]> users = h.db.getallusers();
         for (String[][] s : users) {
-            if (s[4][1].toLowerCase().matches("admision|examenes|pabellon")) {
+            if (s[4][1].toLowerCase().matches("admisión|exámenes|pabellón")) {
                 if (!h.db.readstatus(s[1][1])) {
-                    h.db.addmensajes(s[1][1], "#blue#[PUBLIC FOR *<Administradores>* BY " + h.rol + " " + h.correo + "]: " + "#black#" + auxtext);
+                    h.db.addmensajes(s[1][1], "*#magenta#[PUBLIC FOR <Administrativos> BY " + h.rol + " " + h.correo + "]:* " + "#black#" + auxtext);
                 } else {
                     for (HiloDeCliente conectado : HiloDeCliente.conectados) {
                         if (conectado.correo.equals(s[1][1])) {
-                            conectado.reenviarAlmismosocket("#blue#[PUBLIC FOR *<Administradores>* BY " + h.rol + " " + h.correo + "]: " + "#black#" + auxtext);
+                            conectado.reenviarAlmismosocket("*#magenta#[PUBLIC FOR <Administrativos> BY " + h.rol + " " + h.correo + "]:* " + "#black#" + auxtext);
                         }
                     }
                 }
             }
         }
-        h.reenviarAlmismosocket("#blue#[PUBLIC FOR *<Administradores>* BY " + h.rol + " " + h.correo + "]: " + "#black#" + auxtext);
+        h.reenviarAlmismosocket("*#magenta#[PUBLIC FOR <Administrativos> BY " + h.rol + " " + h.correo + "]:* " + "#black#" + auxtext);
     }
 
     public void enviarMensajeAAuxiliares(String texto, String[] textsplitted) {
@@ -94,11 +94,11 @@ public class SistemaHandler {
         if (h.rol.equals("auxiliar")) {
             for (String[][] s : users) {
                 if (!h.db.readstatus(s[1][1])) {
-                    h.db.addmensajes(s[1][1], "#blue#[PUBLIC FOR *<ALL>* BY Auxiliar:" + h.correo + "]: " + "#black#" + auxtext);
+                    h.db.addmensajes(s[1][1], "*#magenta#[PUBLIC FOR <ALL> BY Auxiliar:" + h.correo + "]:* " + "#black#" + auxtext);
                 } else {
                     for (HiloDeCliente conectado : HiloDeCliente.conectados) {
                         if (conectado.correo.equals(s[1][1])) {
-                            conectado.reenviarAlmismosocket("#blue#[PUBLIC FOR *<ALL>* BY Auxiliar:" + h.correo + "]: " + "#black#" + auxtext);
+                            conectado.reenviarAlmismosocket("*#magenta#[PUBLIC FOR <ALL> BY Auxiliar:" + h.correo + "]:* " + "#black#" + auxtext);
                         }
                     }
                 }
@@ -107,23 +107,23 @@ public class SistemaHandler {
             for (String[][] s : users) {
                 if (s[4][1].toLowerCase().equals("auxiliar")) {
                     if (!h.db.readstatus(s[1][1])) {
-                        h.db.addmensajes(s[1][1], "#blue#[PUBLIC FOR *<Auxiliares>* BY " + h.rol + " " + h.correo + "]: " + "#black#" + auxtext);
+                        h.db.addmensajes(s[1][1], "*#magenta#[PUBLIC FOR <Auxiliares> BY " + h.rol + " " + h.correo + "]:* " + "#black#" + auxtext);
                     } else {
                         for (HiloDeCliente conectado : HiloDeCliente.conectados) {
                             if (conectado.correo.equals(s[1][1])) {
-                                conectado.reenviarAlmismosocket("#blue#[PUBLIC FOR *<Auxiliares>* BY " + h.rol + " " + h.correo + "]: " + "#black#" + auxtext);
+                                conectado.reenviarAlmismosocket("*#magenta#[PUBLIC FOR <Auxiliares> BY " + h.rol + " " + h.correo + "]:* " + "#black#" + auxtext);
                             }
                         }
                     }
                 }
             }
-            h.reenviarAlmismosocket("#blue#[PUBLIC FOR *<Auxiliares>* BY " + h.rol + " " + h.correo + "]: " + "#black#" + auxtext);
+            h.reenviarAlmismosocket("*#magenta#[PUBLIC FOR <Auxiliares> BY " + h.rol + " " + h.correo + "]:* " + "#black#" + auxtext);
         }
     }
 
     public void enviarMensajeDeEmergencia(String texto, String[] textsplitted) {
         if (!h.rol.equals("administrador")) {
-            h.reenviarAlmismosocket("#red#*No permitido*");
+            h.reenviarAlmismosocket("*#red#No permitido*");
             return;
         }
 
@@ -165,7 +165,7 @@ public class SistemaHandler {
 
     public void mostrarEstadisticas() {
         if (!h.rol.equals("administrador")) {
-            h.reenviarAlmismosocket("#red#*No permitido*");
+            h.reenviarAlmismosocket("*#red#No permitido*");
             return;
         }
         for (HiloDeCliente cliente : HiloDeCliente.conectados) {

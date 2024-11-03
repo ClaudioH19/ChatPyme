@@ -13,7 +13,7 @@ public class UsuarioHandler {
 
     public void iniciarSesion(String texto, String[] textsplitted) {
         if (h.rol != null && !h.rol.isEmpty()) {
-            h.reenviarAlmismosocket("#red#CIERRE SESIÓN PRIMERO */exit*");
+            h.reenviarAlmismosocket("#red#Cierre sesión primero */exit*");
             return;
         }
         for (int i = 0; i < textsplitted.length; i++) {
@@ -22,12 +22,12 @@ public class UsuarioHandler {
                 String clave = textsplitted[i + 2];
                 String[][] user = h.db.readuser(correo);
                 if (user == null) {
-                    h.reenviarAlmismosocket("#red#USUARIO NO ENCONTRADO");
+                    h.reenviarAlmismosocket("*#red#USUARIO NO ENCONTRADO");
                     return;
                 }
 
                 if (!user[3][1].equals(clave)) {
-                    h.reenviarAlmismosocket("#red#CONTRASEÑA INCORRECTA");
+                    h.reenviarAlmismosocket("*#red#CONTRASEÑA INCORRECTA");
                     return;
                 }
 
@@ -37,7 +37,7 @@ public class UsuarioHandler {
                 h.clave = user[3][1];
                 h.rol = user[4][1];
                 h.ingreso = Integer.parseInt(user[5][1]);
-                h.reenviarAlmismosocket("*#blue#LOGUEADO COMO:* " + h.nombre + " <" + h.rol + ">");
+                h.reenviarAlmismosocket("*#magenta#Logueado como:* " + h.nombre + " <" + h.rol + ">");
 
                 if (h.ingreso >= 1) {
                     h.ingreso += 1;
@@ -52,7 +52,7 @@ public class UsuarioHandler {
                 HiloDeCliente.conectados.add(h);
 
                 for (HiloDeCliente cliente : HiloDeCliente.conectados) {
-                    cliente.reenviarAlmismosocket("#blue#" + h.nombre + String.format(" *<%s>* ", h.rol) + " Connected");
+                    cliente.reenviarAlmismosocket("#magenta#" + h.nombre + String.format(" *<%s>* ", h.rol) + " Connected");
                 }
 
                 if (!h.db.getchat(h.correo).isEmpty()) {
@@ -71,14 +71,14 @@ public class UsuarioHandler {
                 h.clave = textsplitted[i + 1];
                 h.ingreso += 1;
                 h.db.updateuser(h.correo, "clave", h.clave);
-                h.reenviarAlmismosocket("#BLUE# *CONTRASEÑA MODIFICADA");
+                h.reenviarAlmismosocket("*#magenta# Contraseña modificada");
                 break;
             }
         }
     }
 
     public void leerMensajesPendientes() {
-        h.reenviarAlmismosocket("#orange#*leyendo...");
+        h.reenviarAlmismosocket("*#orange#Mostrando no leídos...");
         ArrayList<String> mensajes = h.db.getchat(h.correo);
         for (String mensaje : mensajes) {
             h.reenviarAlmismosocket(mensaje);
@@ -100,16 +100,24 @@ public class UsuarioHandler {
                     String clave = textsplitted[i + 4];
                     String rol = textsplitted[i + 5].toLowerCase();
 
-                    if (rol.equals("medico")) {
+                    if (rol.equalsIgnoreCase("medico")) {
                         rol = "médico";
                     }
-                    if (!rol.matches("^(médico|administrativo)$")) {
-                        h.reenviarAlmismosocket("#red#ROL NO VÁLIDO. SOLO SE PERMITEN LOS ROLES 'médico' O 'administrativo'.");
+                    if(rol.equalsIgnoreCase("examenes")) {
+                        rol = "exámenes";
+                    }
+                    if(rol.equalsIgnoreCase("pabellon"))
+                        rol = "pabellón";
+                    if(rol.equalsIgnoreCase("admision"))
+                        rol = "admisión";
+
+                    if (!rol.matches("^(médico|exámenes|pabellón|admisión|auxiliar)$")) {
+                        h.reenviarAlmismosocket("#red#Rol *no válido*. Solo se permiten *'médico'*, *'exámenes'*, *'pabellón'*, *'admisión'* o *'auxiliar*'.");
                         return;
                     }
 
                     h.db.createuser(nombre, correo, rut, clave, rol);
-                    h.reenviarAlmismosocket("#blue#USUARIO " + nombre + " CREADO");
+                    h.reenviarAlmismosocket("#magenta#Usuario " + nombre + " creado");
                 } catch (MongoException e) {
                     h.reenviarAlmismosocket(String.valueOf(e));
                 }
@@ -117,4 +125,13 @@ public class UsuarioHandler {
             }
         }
     }
+
+    public void verinfousuario(String origin){
+        for (HiloDeCliente h : HiloDeCliente.conectados) {
+            if (h.idserver.equalsIgnoreCase(origin)) {
+                h.reenviarAlmismosocket("#magenta#Connected as " + h.nombre+String.format(" <%s> <%s>",this.h.rol,this.h.correo) + "\n");
+            }
+        }
+    }
+
 }

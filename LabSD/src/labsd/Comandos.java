@@ -29,6 +29,8 @@ public class Comandos {
             grupoHandler.abandonarGrupo(texto, textsplitted);
         } else if (texto.contains("/group") && validationrol()) {
             grupoHandler.enviarMensajeAGrupo(texto, textsplitted, origin);
+        } else if(texto.contains("/msgs") && validationrol()) {
+            grupoHandler.cargarmsggroup(textsplitted);
         } else if (texto.contains("/allgroups") && validationrol()) {
             grupoHandler.mostrarTodosLosGrupos();
         } else if (texto.contains("/status") && validationrol()) {
@@ -41,6 +43,8 @@ public class Comandos {
             usuarioHandler.leerMensajesPendientes();
         } else if (texto.contains("/register") && validationrol()) {
             usuarioHandler.registrarUsuario(texto, textsplitted);
+        } else if(texto.contains("/whoami") && validationrol()) {
+            usuarioHandler.verinfousuario(origin);
         } else if (texto.contains("/help") && validationrol()) {
             sistemaHandler.mostrarAyuda();
         } else if (texto.contains("/admin") && validationrol()) {
@@ -58,11 +62,11 @@ public class Comandos {
 
     public boolean validationrol() {
         if (this.h.ingreso == 0) {
-            this.h.reenviarAlmismosocket("#red#NECESITA UNA NUEVA CONTRASEÑA, USE */newpassword <clave>");
+            this.h.reenviarAlmismosocket("#red#Nueva contraseña requerida, use #magenta#*/newpassword <clave>");
             return false;
         }
         if (this.h.rol == null || this.h.rol.isEmpty()) {
-            this.h.reenviarAlmismosocket("#blue#NECESITA INGRESAR AL SISTEMA.");
+            this.h.reenviarAlmismosocket("#red#*Necesita ingresar al sistema*");
             return false;
         }
         return true;

@@ -25,7 +25,7 @@ public class MensajePrivadoHandler {
 
             for (HiloDeCliente h : HiloDeCliente.conectados) {
                 if (h.idserver.equalsIgnoreCase(idDest) || h.correo.equalsIgnoreCase(idDest) || h.nombre.equalsIgnoreCase(idDest)) {
-                    h.reenviarAlmismosocket("#blue#[PRIVATE FROM *" + this.h.nombre + " *]: " + "#black#" + auxtext);
+                    h.reenviarAlmismosocket("*#magenta#[PRIVATE FROM " + this.h.nombre + " ]:* " + "#black#" + auxtext);
                     break;
                 }
             }
@@ -38,12 +38,12 @@ public class MensajePrivadoHandler {
 
             for (String[][] s : users) {
                 if ((s[0][1].equals(idDest) || s[1][1].equals(idDest)) && !this.h.db.readstatus(s[1][1])) {
-                    this.h.db.addmensajes(s[1][1], "#blue#[PRIVATE FROM *" + this.h.nombre + " *]: " + "#black#" + auxtext);
+                    this.h.db.addmensajes(s[1][1], "*#magenta#[PRIVATE FROM " + this.h.nombre + " ]:* " + "#black#" + auxtext);
                     break;
                 }
             }
 
-            this.h.reenviarAlmismosocket("#blue#[PRIVATE TO *" + idDest + "*]: " + "#black#" + auxtext);
+            this.h.reenviarAlmismosocket("*#magenta#[PRIVATE TO " + idDest + "]: *" + "#black#" + auxtext);
         }
     }
 }
