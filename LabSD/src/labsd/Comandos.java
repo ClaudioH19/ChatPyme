@@ -173,15 +173,25 @@ public class Comandos {
         //###############################################################
         else if (texto.contains("/help") && validationrol()) {
 
-            this.h.reenviarAlmismosocket(""
-                    + "/whoami ----------> Muestra el ID del server \n"
-                    + "/private # --------> Envía un mensaje privado al ID # \n"
-                    + "/allgroups --------> Muestra todos los gropos creados \n"
-                    + "/group # ----------> Envía un mensaje en el grupo # \n"
-                    + "/create group # --> Crea un grupo de nombre # \n"
-                    + "/join group # -----> Se une al grupo de nombre # \n"
-                    + "/leave group # ---> Se va del grupo de nombre # \n"
-                    + "/status ------------> Muestra el estado del servidor\n\n"
+            this.h.reenviarAlmismosocket(
+                    "\nComandos disponibles:\n" +
+                            "/whoami ----------> Muestra la información de sesión\\n" +
+                            "/private # --------> Envía un mensaje privado al ID #\\n" +
+                            "/allgroups --------> Muestra todos los grupos creados\\n" +
+                            "/group # ----------> Envía un mensaje en el grupo #\\n" +
+                            "/create group # --> Crea un grupo con el nombre #\\n" +
+                            "/join group # -----> Se une al grupo de nombre #\\n" +
+                            "/leave group # ---> Se sale del grupo de nombre #\\n" +
+                            "/status ------------> Muestra el estado del servidor\\n" +
+                            "/login -------------> Inicia sesión con correo y clave\\n" +
+                            "/newpassword <clave> --> Cambia la contraseña\\n" +
+                            "/read --------------> Lee mensajes pendientes\\n" +
+                            "/register ----------> Registra un nuevo usuario (solo administradores)\\n" +
+                            "/admin -------------> Enviar mensaje a roles administrativos\\n" +
+                            "/aux ---------------> Enviar mensaje a auxiliares\\n" +
+                            "/urgency -----------> Enviar mensaje de emergencia (solo administradores)\\n" +
+                            "/stats -------------> Muestra estadísticas de usuarios conectados (solo administradores)\\n" +
+                            "/exit --------------> Desconecta al cliente\\n"
             );
             // ABANDONAR GRUPO
             //###############################################################
