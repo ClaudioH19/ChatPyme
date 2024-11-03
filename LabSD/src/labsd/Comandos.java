@@ -326,7 +326,17 @@ public class Comandos {
                     String correo = textsplitted[i + 2];
                     String rut = textsplitted[i + 3];
                     String clave = textsplitted[i + 4];
-                    String rol = textsplitted[i + 5];
+                    String rol = textsplitted[i + 5].toLowerCase();
+
+                        if (rol.equals("medico")) {
+                            rol = "médico";
+                        }
+                        // con esta ER validamos el rol del user registrado
+                        if (!rol.matches("^(médico|administrativo)$")) {
+                            this.h.reenviarAlmismosocket("#red#ROL NO VÁLIDO. SOLO SE PERMITEN LOS ROLES 'médico' O 'administrativo'.");
+                            return;
+                        }
+
                     this.h.db.createuser(nombre, correo, rut, clave, rol);
                     this.h.reenviarAlmismosocket("#blue#USUARIO "+ nombre +" CREADO");
                     } catch (MongoException e) {
