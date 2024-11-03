@@ -80,13 +80,14 @@ public class GrupoHandler {
                 }
 
                 // Guardar el mensaje en la base de datos
-                this.h.db.insertmsg(textsplitted[i + 1], "#blue#[FROM GROUP *" + textsplitted[i + 1] + "* BY *" + origin + "*]: " + "#black#" + auxtext);
+                this.h.db.insertmsg(textsplitted[i + 1], "*#magenta#[FROM GROUP " + textsplitted[i + 1] + " BY " + origin + "]:* " + "#black#" + auxtext);
+                this.h.reenviarAlmismosocket("*#magenta#[FROM GROUP " + textsplitted[i + 1] + " BY " + origin + "]:* " + "#black#" + auxtext);
 
                 // Enviar el mensaje a todos los integrantes y registrar la interacción solo una vez en el remitente
                 for (String integrante : integrantes) {
                     for (HiloDeCliente h : HiloDeCliente.conectados) {
                         if (h.correo.equalsIgnoreCase(integrante) && !h.idserver.equals(this.h.idserver)) { // Evitar registrar interacción consigo mismo
-                            this.h.enviarMensajeACliente(h, "#blue#[FROM GROUP *" + textsplitted[i + 1] + "* BY *" + origin + "*]: " + "#black#" + auxtext);
+                            this.h.enviarMensajeACliente(h, "*#magenta#[FROM GROUP " + textsplitted[i + 1] + " BY " + origin + "]:* " + "#black#" + auxtext);
                         }
                     }
                 }
@@ -108,7 +109,7 @@ public class GrupoHandler {
     }
 
     public void mostrarTodosLosGrupos() {
-        this.h.reenviarAlmismosocket("#magenta#*Grupos Creados:*\n---------------------");
+        this.h.reenviarAlmismosocket("*#magenta#Grupos Creados:*\n---------------------");
         ArrayList<ArrayList> grupos = this.h.db.getallgroups();
         for (ArrayList grupo : grupos) {
             this.h.reenviarAlmismosocket("*#magenta#Nombre Grupo:* " + grupo.get(0) + "\n* Integrantes:*");

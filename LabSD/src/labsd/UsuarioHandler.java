@@ -16,10 +16,16 @@ public class UsuarioHandler {
             h.reenviarAlmismosocket("#red#Cierre sesión primero */exit*");
             return;
         }
+
         for (int i = 0; i < textsplitted.length; i++) {
+            String correo="default";
+            String clave="null";
             if (textsplitted[i].equals("/login")) {
-                String correo = textsplitted[i + 1];
-                String clave = textsplitted[i + 2];
+                if(i+1<textsplitted.length)
+                    correo = textsplitted[i + 1];
+                if(i+2<textsplitted.length)
+                    clave = textsplitted[i + 2];
+
                 String[][] user = h.db.readuser(correo);
                 if (user == null) {
                     h.reenviarAlmismosocket("*#red#USUARIO NO ENCONTRADO");
@@ -31,12 +37,20 @@ public class UsuarioHandler {
                     return;
                 }
 
+                for (HiloDeCliente h: HiloDeCliente.conectados){
+                    if(h.correo.equals(correo)){
+                        this.h.reenviarAlmismosocket("#red#Usuario ya se encuentra en línea");
+                        return;
+                    }
+                }
+
                 h.nombre = user[0][1];
                 h.correo = user[1][1];
                 h.rut = user[2][1];
                 h.clave = user[3][1];
                 h.rol = user[4][1];
                 h.ingreso = Integer.parseInt(user[5][1]);
+
                 h.reenviarAlmismosocket("*#magenta#Logueado como:* " + h.nombre + " <" + h.rol + ">");
 
                 if (h.ingreso >= 1) {
@@ -52,7 +66,8 @@ public class UsuarioHandler {
                 HiloDeCliente.conectados.add(h);
 
                 for (HiloDeCliente cliente : HiloDeCliente.conectados) {
-                    cliente.reenviarAlmismosocket("#magenta#" + h.nombre + String.format(" *<%s>* ", h.rol) + " Connected");
+                    if(!cliente.correo.equals(h.correo)){}
+                        cliente.reenviarAlmismosocket("#magenta#" + h.nombre + String.format(" *<%s>* ", h.rol) + " Connected");
                 }
 
                 if (!h.db.getchat(h.correo).isEmpty()) {
@@ -94,11 +109,18 @@ public class UsuarioHandler {
         for (int i = 0; i < textsplitted.length; i++) {
             if (textsplitted[i].equals("/register")) {
                 try {
-                    String nombre = textsplitted[i + 1];
-                    String correo = textsplitted[i + 2];
-                    String rut = textsplitted[i + 3];
-                    String clave = textsplitted[i + 4];
-                    String rol = textsplitted[i + 5].toLowerCase();
+                    String nombre="default",correo="default",rut="default",clave="default",rol="auxiliar";
+
+                    if(i+1<textsplitted.length)
+                        nombre = textsplitted[i + 1];
+                    if(i+2<textsplitted.length)
+                        correo = textsplitted[i + 2];
+                    if(i+3<textsplitted.length)
+                        rut = textsplitted[i + 3];
+                    if(i+4<textsplitted.length)
+                        clave = textsplitted[i + 4];
+                    if(i+5<textsplitted.length)
+                        rol = textsplitted[i + 5].toLowerCase();
 
                     if (rol.equalsIgnoreCase("medico")) {
                         rol = "médico";

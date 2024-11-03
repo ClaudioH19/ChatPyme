@@ -212,12 +212,18 @@ public class Basededatos {
 
     public ArrayList getintegrantes(String nombre) {
         MongoCollection<Document> collection = db.getCollection("groups");
-        return (ArrayList) collection.find(new Document("nombre", nombre)).first().get("integrantes");
+        Document c = collection.find(new Document("nombre", nombre)).first();
+        if(c==null)
+            return new ArrayList();
+        return (ArrayList) c.get("integrantes");
     }
 
     public ArrayList getmensajes(String nombre){
         MongoCollection<Document> collection = db.getCollection("groups");
-        return (ArrayList) collection.find(new Document("nombre",nombre)).first().get("mensajes");
+        Document c = collection.find(new Document("nombre",nombre)).first();
+        if(c==null)
+            return new ArrayList();
+        return (ArrayList) c.get("mensajes");
     }
 
 

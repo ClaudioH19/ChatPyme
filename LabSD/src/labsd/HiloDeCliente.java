@@ -72,6 +72,7 @@ public class HiloDeCliente implements Runnable, ListDataListener {
 
     @Override
     public void run() {
+
         this.reenviarAlmismosocket("#magenta#Para ingresar: */login <correo> <clave>* PARA INGRESAR.");
         this.idserver = Thread.currentThread().getName();
 
