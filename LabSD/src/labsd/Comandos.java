@@ -468,16 +468,34 @@ public class Comandos {
             //this.h.reenviarAlmismosocket("*#red#[URGENCY]: " + "#orange#" + auxtext);
 
 
-        } else if (texto.contains("/stats")) {
-            if(!this.h.rol.equals("administrador")){
+        }else if (texto.contains("/stats")) {
+            if (!this.h.rol.equals("administrador")) {
                 this.h.reenviarAlmismosocket("#red#*No permitido*");
                 return;
             }
             for (HiloDeCliente h : HiloDeCliente.conectados) {
-                long currenttime = System.currentTimeMillis()-h.inisesion;
-                this.h.reenviarAlmismosocket("*"+h.idserver+":* "+h.correo+" *Tiempo:* "+currenttime+" *Mensajes:* "+h.cantmsg+" ");
+                long currenttime = System.currentTimeMillis() - h.inisesion;
+
+                // Mensaje base con información del usuario
+                StringBuilder estadisticas = new StringBuilder("*" + h.idserver + ":* " + h.correo
+                        + " *Tiempo:* " + currenttime
+                        + " *Mensajes:* " + h.cantmsg + "\n");
+
+                // Agregar estadísticas de interacción con otros usuarios
+                estadisticas.append(" *Interacciones con otros usuarios:* \n");
+                for (HiloDeCliente otroUsuario : HiloDeCliente.conectados) {
+                    if (!otroUsuario.idserver.equals(h.idserver)) { // Excluir al propio usuario
+                        int interacciones = h.obtenerInteraccionConUsuario(otroUsuario.idserver);
+                        estadisticas.append("   - Con ").append(otroUsuario.correo)
+                                .append(": ").append(interacciones).append(" mensajes\n");
+                    }
+                }
+
+                // Enviar las estadísticas completas al administrador
+                this.h.reenviarAlmismosocket(estadisticas.toString());
             }
         }
+
 
 
         //EXIT

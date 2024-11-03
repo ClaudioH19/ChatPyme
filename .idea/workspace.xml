@@ -6,10 +6,10 @@
   <component name="ChangeListManager">
     <list default="true" id="33d02799-9423-44ae-99e1-e66e860f734f" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/LabSD/src/labsd/ClienteChat.java" beforeDir="false" afterPath="$PROJECT_DIR$/LabSD/src/labsd/ClienteChat.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/LabSD/src/labsd/Comandos.java" beforeDir="false" afterPath="$PROJECT_DIR$/LabSD/src/labsd/Comandos.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/labsd/ClienteChat.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/labsd/ClienteChat.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/LabSD/src/labsd/HiloDeCliente.java" beforeDir="false" afterPath="$PROJECT_DIR$/LabSD/src/labsd/HiloDeCliente.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/classes/labsd/Comandos.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/labsd/Comandos.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/labsd/HiloDeCliente.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/labsd/HiloDeCliente.class" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -19,14 +19,14 @@
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "Application.ClienteChat.executor": "Run",
-    "Application.ServidorChat.executor": "Run",
-    "git-widget-placeholder": "David",
-    "node.js.selected.package.tslint": "(autodetect)"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;Application.ClienteChat.executor&quot;: &quot;Run&quot;,
+    &quot;Application.ServidorChat.executor&quot;: &quot;Run&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;David&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;
   }
-}]]></component>
+}</component>
   <component name="RunManager" selected="Application.ClienteChat">
     <configuration name="ClienteChat" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="labsd.ClienteChat" />
@@ -50,6 +50,19 @@
           <option name="ENABLED" value="true" />
         </pattern>
       </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration default="true" type="JetRunConfigurationType">
+      <module name="mi-proyecto" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration default="true" type="KotlinStandaloneScriptRunConfigurationType">
+      <module name="mi-proyecto" />
+      <option name="filePath" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>

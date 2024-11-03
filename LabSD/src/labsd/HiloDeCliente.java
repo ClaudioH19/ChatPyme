@@ -7,7 +7,8 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.Socket;
 import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Objects;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -38,27 +39,27 @@ public class HiloDeCliente implements Runnable, ListDataListener {
     public Basededatos db;
     public Comandos cmd;
 
-    //estadisticas
+    // Estadísticas
     public long inisesion;
     public int cantmsg;
-
-
+    private Map<String, Integer> interaccionesConUsuarios; // pa contar interacciones con otros
 
     public HiloDeCliente(DefaultListModel mensajes, Socket socket) {
         this.idserver = "";
-        this.nombre="";
-        this.correo="";
-        this.rut="";
-        this.clave="";
-        this.rol="";
-        this.ingreso=-1;
+        this.nombre = "";
+        this.correo = "";
+        this.rut = "";
+        this.clave = "";
+        this.rol = "";
+        this.ingreso = -1;
         this.mensajes = mensajes;
         this.socket = socket;
         this.connected = true;
         this.db = new Basededatos();
         this.cmd = new Comandos(this);
         this.inisesion = 0;
-        this.cantmsg=0;
+        this.cantmsg = 0;
+        this.interaccionesConUsuarios = new HashMap<>(); // mapa de interacciones
 
         try {
             dataInput = new DataInputStream(socket.getInputStream());
@@ -67,7 +68,6 @@ public class HiloDeCliente implements Runnable, ListDataListener {
         } catch (Exception e) {
             e.printStackTrace();
         }
-
     }
 
     @Override
@@ -80,38 +80,32 @@ public class HiloDeCliente implements Runnable, ListDataListener {
                 String texto = dataInput.readUTF();
                 String[] textsplitted = texto.split(" ");
 
-                String textosinid="";
+                String textosinid = "";
                 for (int i = 1; i < textsplitted.length; i++) {
-                    textosinid+=textsplitted[i];
-                    if(i<textsplitted.length-1){
-                        textosinid+=" ";
+                    textosinid += textsplitted[i];
+                    if (i < textsplitted.length - 1) {
+                        textosinid += " ";
                     }
                 }
 
-                //EJECUTAR COMANDOS------------------------------------------------
-
+                // Ejecutar comandos
                 String idDest = "-1";
-                //ver destinatario
                 String origin = textsplitted[0];
                 System.out.println("ORIGIN: " + origin);
 
                 cmd.comandos(texto, textsplitted, idDest, origin);
 
-
-                //SALA PUBLICA DESCARTAR POR ROLES---------------------------------
+                // Sala pública según roles
                 if (!texto.contains("/") && cmd.validationrol()) {
                     synchronized (mensajes) {
-                        for(HiloDeCliente h : conectados){
-                            if(h.rol.equals(this.rol)){
-                                h.reenviarAlmismosocket(String.format("#blue#[PUBLIC FOR <%s> %s]:#black# %s",this.rol,this.nombre,textosinid));
+                        for (HiloDeCliente h : conectados) {
+                            if (h.rol.equals(this.rol)) {
+                                h.reenviarAlmismosocket(String.format("#blue#[PUBLIC FOR <%s> %s]:#black# %s", this.rol, this.nombre, textosinid));
                             }
-
                         }
-                        //mensajes.addElement("[PUBLIC "+this.nombre+ "]<"+this.rol+">: "+ textosinid);
                         System.out.println(texto);
                     }
                 }
-
             }
 
         } catch (Exception e) {
@@ -119,9 +113,7 @@ public class HiloDeCliente implements Runnable, ListDataListener {
         } catch (Throwable ex) {
             Logger.getLogger(HiloDeCliente.class.getName()).log(Level.SEVERE, null, ex);
         } finally {
-            // Liberar recursos cuando el hilo termina
-            // Cerrar el socket y los flujos
-            try{
+            try {
                 if (socket != null && !socket.isClosed()) {
                     socket.close();
                 }
@@ -131,22 +123,31 @@ public class HiloDeCliente implements Runnable, ListDataListener {
                 if (dataOutput != null) {
                     dataOutput.close();
                 }
-            }
-            catch(Exception e){}
+            } catch (Exception e) {}
             conectados.remove(this);
         }
     }
 
-    public void reenviarAlmismosocket(String mensaje) {
+    // interacción con otro usuario
+    public void registrarInteraccion(String idUsuario) {
+        interaccionesConUsuarios.put(idUsuario, interaccionesConUsuarios.getOrDefault(idUsuario, 0) + 1);
+    }
 
+    // Envía mensaje y registra interacción
+    public void reenviarAlmismosocket(String mensaje) {
         try {
             dataOutput.writeUTF(mensaje);
             this.cantmsg++;
             this.historial.add(mensaje);
+            registrarInteraccion(this.idserver); // Registra la interacción
         } catch (IOException ex) {
             Logger.getLogger(HiloDeCliente.class.getName()).log(Level.SEVERE, null, ex);
         }
+    }
 
+    // Obtiene el conteo de mensajes con un usuario específico
+    public int obtenerInteraccionConUsuario(String idUsuario) {
+        return interaccionesConUsuarios.getOrDefault(idUsuario, 0);
     }
 
     @Override
@@ -156,19 +157,16 @@ public class HiloDeCliente implements Runnable, ListDataListener {
             dataOutput.writeUTF(texto);
             this.cantmsg++;
             this.historial.add(texto);
+            registrarInteraccion(this.idserver); // Registra interacción
         } catch (Exception excepcion) {
             excepcion.printStackTrace();
         }
     }
 
     @Override
-    public void intervalRemoved(ListDataEvent e) {
-        //throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
-    }
+    public void intervalRemoved(ListDataEvent e) {}
 
     @Override
-    public void contentsChanged(ListDataEvent e) {
-        //throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
-    }
+    public void contentsChanged(ListDataEvent e) {}
 
 }
