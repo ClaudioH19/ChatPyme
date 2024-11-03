@@ -7,10 +7,10 @@
     <list default="true" id="33d02799-9423-44ae-99e1-e66e860f734f" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/LabSD/src/labsd/Comandos.java" beforeDir="false" afterPath="$PROJECT_DIR$/LabSD/src/labsd/Comandos.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/LabSD/src/labsd/ControlCliente.java" beforeDir="false" afterPath="$PROJECT_DIR$/LabSD/src/labsd/ControlCliente.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/LabSD/src/labsd/PanelCliente.java" beforeDir="false" afterPath="$PROJECT_DIR$/LabSD/src/labsd/PanelCliente.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/classes/labsd/Comandos.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/labsd/Comandos.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/labsd/ControlCliente$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/labsd/ControlCliente$1.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/labsd/ControlCliente.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/labsd/ControlCliente.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/labsd/PanelCliente$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/labsd/PanelCliente$1.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/labsd/PanelCliente.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/labsd/PanelCliente.class" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
