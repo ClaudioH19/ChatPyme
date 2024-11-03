@@ -132,7 +132,21 @@ public class HiloDeCliente implements Runnable, ListDataListener {
     public void registrarInteraccion(String idUsuario) {
         interaccionesConUsuarios.put(idUsuario, interaccionesConUsuarios.getOrDefault(idUsuario, 0) + 1);
     }
+    // Enviar mensaje a otro cliente y registrar la interacción
+    public void enviarMensajeACliente(HiloDeCliente destinatario, String mensaje) {
+        try {
+            destinatario.dataOutput.writeUTF(mensaje);
+            destinatario.cantmsg++;
+            destinatario.historial.add(mensaje);
 
+            // Registrar la interacción solo en el remitente
+            if (!this.idserver.equals(destinatario.idserver)) { // Asegúrate de no contar al propio usuario
+                this.registrarInteraccion(destinatario.idserver);
+            }
+        } catch (IOException ex) {
+            Logger.getLogger(HiloDeCliente.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
     // Envía mensaje y registra interacción
     public void reenviarAlmismosocket(String mensaje) {
         try {

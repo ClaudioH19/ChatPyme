@@ -165,7 +165,7 @@ public class SistemaHandler {
 
     public void mostrarEstadisticas() {
         if (!h.rol.equals("administrador")) {
-            h.reenviarAlmismosocket("*#red#No permitido*");
+            h.reenviarAlmismosocket("#red#*No permitido*");
             return;
         }
         for (HiloDeCliente cliente : HiloDeCliente.conectados) {
