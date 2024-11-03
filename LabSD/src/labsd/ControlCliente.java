@@ -84,16 +84,25 @@ public class ControlCliente implements ActionListener, Runnable {
                         italic=!italic;
                     }
 
-                    if(texto.charAt(i)=='#'){
-                        String aux="";
-                        for (i=i+1;i<texto.length() && texto.charAt(i)!='#';i++){
-                            aux+=texto.charAt(i);
+                    if (texto.charAt(i) == '#') {
+                        String aux = "";
+                        for (i = i + 1; i < texto.length() && texto.charAt(i) != '#'; i++) {
+                            aux += texto.charAt(i);
                         }
-                        if(i<texto.length()-1)
-                            i+=1;
-                        Field field = Color.class.getField(aux.toUpperCase());
-                        color = (Color) field.get(null);
+                        if (i < texto.length() - 1)
+                            i += 1;
+
+                        try {
+                            Field field = Color.class.getField(aux.toUpperCase());
+                            color = (Color) field.get(null);
+                        } catch (NoSuchFieldException | IllegalAccessException e) {
+                            // Si el campo no existe, asignamos un color predeterminado (ej. negro)
+                            System.err.println("Color no reconocido: " + aux + ". Se usará el color por defecto (negro).");
+                            color = Color.BLACK;
                         }
+                    }
+
+
 
                     // Convertir el color a su valor hexadecimal
                     hex = String.format("#%06X", color.getRGB() & 0xFFFFFF);

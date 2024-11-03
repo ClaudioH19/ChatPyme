@@ -49,7 +49,7 @@ public class ServidorChat {
                 clock.start();
 
 
-                System.out.println("ENVIANDO: "+String.valueOf(hilo.getName()));
+                //System.out.println("ENVIANDO: "+String.valueOf(hilo.getName()));
                 //salida.writeUTF(hilo.getName()); // Enviar el ID único al cliente conectado
 
 
