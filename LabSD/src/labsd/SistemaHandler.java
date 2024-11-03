@@ -150,22 +150,26 @@ public class SistemaHandler {
         }
     }
     public void desconectarCliente(String origin) {
-        h.db.changestatus(h.correo, false);
+        if(this.h.correo.isEmpty())
+            return;
+
+        this.h.db.changestatus(this.h.correo, false);
         for (int i = 0; i < HiloDeCliente.conectados.size(); i++) {
             HiloDeCliente cliente = HiloDeCliente.conectados.get(i);
-            cliente.reenviarAlmismosocket("\n---------------------\n#red#" + h.nombre + " is disconnected\n---------------------");
+            cliente.reenviarAlmismosocket("#magenta#\n---------------------\n#red#" + this.h.nombre + " is disconnected\n---------------------");
             if (cliente.idserver.equals(origin)) {
                 cliente.connected = false;
                 HiloDeCliente.conectados.remove(i);
                 break;
             }
         }
-        h.reenviarAlmismosocket("#red#Has sido desconectado.");
+        this.h.reenviarAlmismosocket("#red#Has sido desconectado.");
+        Thread.interrupted();
     }
 
     public void mostrarEstadisticas() {
         if (!h.rol.equals("administrador")) {
-            h.reenviarAlmismosocket("#red#*No permitido*");
+            h.reenviarAlmismosocket("*#red#No permitido*");
             return;
         }
         for (HiloDeCliente cliente : HiloDeCliente.conectados) {

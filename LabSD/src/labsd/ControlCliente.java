@@ -23,11 +23,12 @@ public class ControlCliente implements ActionListener, Runnable {
     private Thread hilo;
     private String IDserver;
     public boolean connected;
-
+    private final Socket socket;
 
     JFrame v;
 
     public ControlCliente(Socket socket) {
+        this.socket = socket;
         this.connected = true;
         //this.panel = panel;
         try {
@@ -60,14 +61,20 @@ public class ControlCliente implements ActionListener, Runnable {
     public void run() {
         try {
             while (connected) {
-                String texto = dataInput.readUTF();
+                String texto="";
+                try {
+                    // Lee el mensaje
+                    texto = dataInput.readUTF();
+                } catch (IOException excepcion) {
+                    connected = false;  // Marca como desconectado para intentar reconectar
+                    texto="*#red#Se ha perdido la conexión, cierre y vuelva a intentar";
+                }
 
                 boolean underline=false;
                 boolean bold=false;
                 boolean italic=false;
                 Color color= Color.BLACK;
                 //parsear texto
-                System.out.println(texto);
                 for (int i = 0; i < texto.length(); i++) {
                     String hex="";
                     if(texto.charAt(i)=='_'){
@@ -115,6 +122,10 @@ public class ControlCliente implements ActionListener, Runnable {
 
                 panel.addTexto("\n",false,false,false, Color.BLACK);
             }
+
+            Thread.interrupted();
+            v.dispose();
+
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -124,7 +135,7 @@ public class ControlCliente implements ActionListener, Runnable {
         v = new JFrame();
         panel = new PanelCliente(v.getContentPane());
         v.pack();
-        v.setTitle("CONECTADO COMO: " + IDserver + "\n");
+        v.setTitle("ChatPyme");
         v.setVisible(true);
         v.setSize(1200, 720);
         v.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);

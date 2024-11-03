@@ -24,12 +24,13 @@ public class ServidorChat {
     
     
     public ServidorChat() {
+            int port=5000;
         try {
-            ServerSocket socketServidor = new ServerSocket(5000);
+            ServerSocket socketServidor = new ServerSocket(port);
             HiloDeCliente.conectados = new ArrayList();
             HiloDeCliente.groups = new ArrayList<ArrayList>();
             HiloDeCliente.historial= new ArrayList();
-
+            System.out.println("SERVIDOR ACTIVO EN PUERTO: "+port);
             while (true) {
                 Socket cliente = socketServidor.accept();
 
