@@ -144,7 +144,7 @@ public class ControlCliente implements ActionListener, Runnable {
             @Override
             public void windowClosing(WindowEvent e) {
                 try {
-                    dataOutput.writeUTF(IDserver + " /exit");
+                    dataOutput.writeUTF("/exit");
                 } catch (IOException ex) {
                     Logger.getLogger(ControlCliente.class.getName()).log(Level.SEVERE, null, ex);
                 } finally {
