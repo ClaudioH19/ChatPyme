@@ -22,10 +22,21 @@ public class MensajePrivadoHandler {
             }
         }
 
-        for (HiloDeCliente h : HiloDeCliente.conectados) {
-            if (h.idserver.equalsIgnoreCase(idDest) || h.correo.equalsIgnoreCase(idDest) || h.nombre.equalsIgnoreCase(idDest)) {
-                this.h.enviarMensajeACliente(h, "*#magenta#[PRIVATE FROM " + this.h.nombre + " ]:* " + "#black#" + auxtext.trim());
-                break; // Evita enviar múltiples veces si encuentra más de un destinatario
+        ArrayList<String[][]> users = h.db.getallusers();
+        boolean conectado=true;
+        for (String[][] s : users) {
+            if (!h.db.readstatus(s[1][1])) {
+                h.db.addmensajes(s[1][1], "*#red#[URGENCY]: " + "#orange#" + auxtext);
+                conectado=false;
+            }
+        }
+
+        if(conectado) {
+            for (HiloDeCliente conectado : HiloDeCliente.conectados) {
+                if (conectado.correo.equals(idDest) || conectado.nombre.equals(idDest)) {
+                    conectado.reenviarAlmismosocket("*#magenta#[PRIVATE FROM " + this.h.nombre + " ]:* " + "#black#" + auxtext.trim());
+                    break; // Evita enviar múltiples veces si encuentra más de un destinatario
+                }
             }
         }
 

@@ -27,7 +27,7 @@ public class ClienteChat {
 
     public ClienteChat() throws Throwable {
         try {
-            socket = new Socket("localhost", 5000);
+            socket = new Socket("34.45.99.17", 80);
             ControlCliente control = new ControlCliente(socket);
 
         } catch (Exception e) {
