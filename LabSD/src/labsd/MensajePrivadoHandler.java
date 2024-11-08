@@ -26,7 +26,8 @@ public class MensajePrivadoHandler {
         boolean conectado=true;
         for (String[][] s : users) {
             if (!h.db.readstatus(s[1][1])) {
-                h.db.addmensajes(s[1][1], "*#red#[URGENCY]: " + "#orange#" + auxtext);
+                h.db.addmensajes(s[1][1], "*#magenta#[PRIVATE FROM " + this.h.nombre + " ]:* " + "#black#" + auxtext.trim());
+                System.out.println("Mensaje guardado en pendiente");
                 conectado=false;
             }
         }
