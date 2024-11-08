@@ -5,7 +5,7 @@ import java.util.ArrayList;
 public class MensajePrivadoHandler {
     private HiloDeCliente h;
     public static ArrayList<String[][]> users;
-
+    //ArrayList<String[][]> users = h.db.getallusers();
     public MensajePrivadoHandler(HiloDeCliente h) {
         this.h = h;
     }
@@ -22,13 +22,13 @@ public class MensajePrivadoHandler {
             }
         }
 
-        ArrayList<String[][]> users = h.db.getallusers();
         boolean conectado=true;
         for (String[][] s : users) {
-            if (!h.db.readstatus(s[1][1])) {
+            if (!h.db.readstatus(s[1][1]) && (idDest.equals(s[1][1]) || idDest.equals(s[0][1]))) {
                 h.db.addmensajes(s[1][1], "*#magenta#[PRIVATE FROM " + this.h.nombre + " ]:* " + "#black#" + auxtext.trim());
                 System.out.println("Mensaje guardado en pendiente");
-                conectado=false;
+                conectado = false;
+                break;
             }
         }
 
