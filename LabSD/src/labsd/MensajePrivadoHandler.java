@@ -32,9 +32,9 @@ public class MensajePrivadoHandler {
         }
 
         if(conectado) {
-            for (HiloDeCliente conectado : HiloDeCliente.conectados) {
-                if (conectado.correo.equals(idDest) || conectado.nombre.equals(idDest)) {
-                    conectado.reenviarAlmismosocket("*#magenta#[PRIVATE FROM " + this.h.nombre + " ]:* " + "#black#" + auxtext.trim());
+            for (HiloDeCliente h: HiloDeCliente.conectados) {
+                if (h.correo.equals(idDest) || h.nombre.equals(idDest)) {
+                    h.reenviarAlmismosocket("*#magenta#[PRIVATE FROM " + this.h.nombre + " ]:* " + "#black#" + auxtext.trim());
                     break; // Evita enviar múltiples veces si encuentra más de un destinatario
                 }
             }
