@@ -11,9 +11,15 @@ import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.Socket;
+import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.lang.reflect.Field;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.BufferedReader;
+import java.io.FileReader;
+
 
 public class ControlCliente implements ActionListener, Runnable {
 
@@ -24,10 +30,13 @@ public class ControlCliente implements ActionListener, Runnable {
     private String IDserver;
     public boolean connected;
     private final Socket socket;
+    File file;
 
     JFrame v;
 
-    public ControlCliente(Socket socket) {
+    public ArrayList<String> msg_noenviados = new ArrayList<String>();
+
+    public ControlCliente(Socket socket) throws IOException {
         this.socket = socket;
         this.connected = true;
         //this.panel = panel;
@@ -46,19 +55,68 @@ public class ControlCliente implements ActionListener, Runnable {
         } catch (Exception e) {
             e.printStackTrace();
         }
+
+        ///abrir un arhcivo para copias locales
+        String filePath = "savelocal.txt";
+        file = new File(filePath);
+        if (!file.exists()) {
+            // Si no existe, intenta crearlo
+            if (file.createNewFile()) {
+                System.out.println("Ruta local creada: " + filePath);
+            } else {
+                throw new IOException("No se pudo crear la ruta de copias locales.");
+            }
+        }
     }
+
+
+    public void saveText(File file, String msg) throws IOException {
+        System.out.println("A GUARDAR: "+msg);
+        try (FileWriter writer = new FileWriter(file, true)) {
+            writer.write(msg + System.lineSeparator());
+            System.out.println("Mensaje guardado");
+        }
+    }
+
+    public void subirLocal() throws IOException {
+        try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
+            String line;
+            System.out.println("Subiendo pendientes");
+            while ((line = reader.readLine()) != null) {
+                String[] arr_aux = line.split(" ");
+                //solo si lo guardado pertenece a este usuario se enviará
+                if(arr_aux.length>0 && arr_aux[0].equals(IDserver))
+                    dataOutput.writeUTF(line);
+            }
+            //borrar contenido
+            try (FileWriter writer = new FileWriter(file, false)) {
+                writer.write("");
+                System.out.println("Local subido y borrado");
+            }
+        }
+    }
+
 
     @Override
     public void actionPerformed(ActionEvent evento) {
+        String mensaje=IDserver + " " + panel.getTexto()+" ";
         try {//los espacios ayudan a parsear el texto por lado del servidor, es util para separar datos del mensaje
-            dataOutput.writeUTF(IDserver + " " + panel.getTexto()+" ");
+            dataOutput.writeUTF(mensaje);
         } catch (Exception excepcion) {
+            try {
+                System.out.println("MENSAJE: "+mensaje);
+                saveText(file,mensaje);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
             excepcion.printStackTrace();
         }
     }
 
     @Override
     public void run() {
+
+        boolean error=false;
         try {
             while (connected) {
                 String texto="";
@@ -67,67 +125,90 @@ public class ControlCliente implements ActionListener, Runnable {
                     texto = dataInput.readUTF();
                 } catch (IOException excepcion) {
                     connected = false;  // Marca como desconectado para intentar reconectar
-                    texto="*#red#Se ha perdido la conexión, cierre y vuelva a intentar";
+                    error=true;
+                    //texto="*#red#Se ha perdido la conexión, cierre y vuelva a intentar";
                 }
 
-                boolean underline=false;
-                boolean bold=false;
-                boolean italic=false;
-                Color color= Color.BLACK;
-                //parsear texto
-                for (int i = 0; i < texto.length(); i++) {
-                    String hex="";
-                    if(texto.charAt(i)=='_'){
-                        underline=!underline;
+                if(texto.contains("/loggedsucceed")) { //esta es la bandera enviada que reporta un logueo
+
+                    //haremos un enroque entre el idserver inicial con el correo ahora que existe
+                    String[] array =texto.split(" ");
+                    this.IDserver = array[array.length-1]; //aquí está el correo
+                    try {
+                        if(texto.contains(this.IDserver))
+                            subirLocal();
+                    } catch (IOException e) {
+                        throw new RuntimeException(e);
                     }
-
-
-                    if(texto.charAt(i)=='*'){
-                        bold=!bold;
-                    }
-
-
-                    if(texto.charAt(i)=='~'){
-                        italic=!italic;
-                    }
-
-                    if (texto.charAt(i) == '#') {
-                        String aux = "";
-                        for (i = i + 1; i < texto.length() && texto.charAt(i) != '#'; i++) {
-                            aux += texto.charAt(i);
+                }
+                else{
+                    boolean underline=false;
+                    boolean bold=false;
+                    boolean italic=false;
+                    Color color= Color.BLACK;
+                    //parsear texto
+                    for (int i = 0; i < texto.length(); i++) {
+                        String hex="";
+                        if(texto.charAt(i)=='_'){
+                            underline=!underline;
                         }
-                        if (i < texto.length() - 1)
-                            i += 1;
 
-                        try {
-                            Field field = Color.class.getField(aux.toUpperCase());
-                            color = (Color) field.get(null);
-                        } catch (NoSuchFieldException | IllegalAccessException e) {
-                            // Si el campo no existe, asignamos un color predeterminado (ej. negro)
-                            System.err.println("Color no reconocido: " + aux + ". Se usará el color por defecto (negro).");
-                            color = Color.BLACK;
+
+                        if(texto.charAt(i)=='*'){
+                            bold=!bold;
                         }
+
+
+                        if(texto.charAt(i)=='~'){
+                            italic=!italic;
+                        }
+
+                        if (texto.charAt(i) == '#') {
+                            String aux = "";
+                            for (i = i + 1; i < texto.length() && texto.charAt(i) != '#'; i++) {
+                                aux += texto.charAt(i);
+                            }
+                            if (i < texto.length() - 1)
+                                i += 1;
+
+                            try {
+                                Field field = Color.class.getField(aux.toUpperCase());
+                                color = (Color) field.get(null);
+                            } catch (NoSuchFieldException | IllegalAccessException e) {
+                                // Si el campo no existe, asignamos un color predeterminado (ej. negro)
+                                System.err.println("Color no reconocido: " + aux + ". Se usará el color por defecto (negro).");
+                                color = Color.BLACK;
+                            }
+                        }
+
+                        // Convertir el color a su valor hexadecimal
+                        hex = String.format("#%06X", color.getRGB() & 0xFFFFFF);
+                        color = Color.decode(hex);
+                        if( (texto.charAt(i)!='*') && (texto.charAt(i)!='~') && (texto.charAt(i)!='_'))
+                            panel.addTexto(texto.charAt(i)+"",bold,italic,underline,color);
+
                     }
-
-
-
-                    // Convertir el color a su valor hexadecimal
-                    hex = String.format("#%06X", color.getRGB() & 0xFFFFFF);
-                    color = Color.decode(hex);
-                    if( (texto.charAt(i)!='*') && (texto.charAt(i)!='~') && (texto.charAt(i)!='_'))
-                        panel.addTexto(texto.charAt(i)+"",bold,italic,underline,color);
-
 
                 }
 
                 panel.addTexto("\n",false,false,false, Color.BLACK);
             }
 
-            Thread.interrupted();
-            v.dispose();
+            //zona de desconexion
+            if(error){
+                //intentar reconectar
+                while(error){
+                    panel.addTexto("Desconxión detectada, los mensajes se guardarán en local\n",true,false,false,Color.RED);
+                    //System.out.println("*#red#Desconxión detectada, los mensajes se guardarán en local");
+                    Thread.sleep(2000);
+                }
+
+            }
+
 
         } catch (Exception e) {
             e.printStackTrace();
+            Thread.interrupted();
         }
     }
 

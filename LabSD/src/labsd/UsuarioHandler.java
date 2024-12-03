@@ -52,7 +52,7 @@ public class UsuarioHandler {
                 h.ingreso = Integer.parseInt(user[5][1]);
 
                 h.reenviarAlmismosocket("*#magenta#Logueado como:* " + h.nombre + " <" + h.rol + ">");
-
+                h.reenviarAlmismosocket("/loggedsucceed "+ h.idserver +" "+h.correo); //esto servira para enviar una bandera de que se ha logueado, de paso enviamos su correo
                 if (h.ingreso >= 1) {
                     h.ingreso += 1;
                 }
