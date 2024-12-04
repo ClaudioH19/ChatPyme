@@ -24,7 +24,7 @@ public class ServidorChat {
     
     
     public ServidorChat() {
-            int port=5000;
+            int port=80;
         try {
             ServerSocket socketServidor = new ServerSocket(port);
             HiloDeCliente.conectados = new ArrayList();
