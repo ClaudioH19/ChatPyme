@@ -7,11 +7,6 @@
     <list default="true" id="33d02799-9423-44ae-99e1-e66e860f734f" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/LabSD/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/LabSD/pom.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/LabSD/src/labsd/ControlCliente.java" beforeDir="false" afterPath="$PROJECT_DIR$/LabSD/src/labsd/ControlCliente.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/LabSD/src/labsd/ServidorChat.java" beforeDir="false" afterPath="$PROJECT_DIR$/LabSD/src/labsd/ServidorChat.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/labsd/ControlCliente$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/labsd/ControlCliente$1.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/labsd/ControlCliente.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/labsd/ControlCliente.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/labsd/ServidorChat.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/labsd/ServidorChat.class" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -104,7 +99,7 @@
       <workItem from="1730643223605" duration="1237000" />
       <workItem from="1733163427710" duration="17620000" />
       <workItem from="1733238674643" duration="8584000" />
-      <workItem from="1733262565361" duration="6316000" />
+      <workItem from="1733262565361" duration="6982000" />
     </task>
     <servers />
   </component>
