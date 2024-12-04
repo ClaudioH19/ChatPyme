@@ -20,13 +20,16 @@ public class Clock extends Thread{
             Basededatos db = new Basededatos();
             ArrayList<String[][]> users = db.getallusers();
 
+
+            int idx=0;
             for (HiloDeCliente h : HiloDeCliente.conectados){
                 try {
                     if (!db.readstatus(h.correo))
-                        HiloDeCliente.removeUserDisconected(h.correo);
+                        HiloDeCliente.conectados.remove(idx);
                 }catch(MongoException e) {
                     e.printStackTrace();
                 }
+                idx++;
             }
 
             try {

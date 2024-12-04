@@ -185,14 +185,5 @@ public class HiloDeCliente implements Runnable, ListDataListener {
     public void contentsChanged(ListDataEvent e) {}
 
 
-    public static synchronized void removeUserDisconected(String correo){
-        int idx=0;
-        for (HiloDeCliente h: conectados){
-            if(correo.equals(h.correo)){
-                conectados.remove(idx);
-                return;
-            }
-        }
-    }
 
 }
