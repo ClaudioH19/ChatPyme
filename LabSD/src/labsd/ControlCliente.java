@@ -29,7 +29,7 @@ public class ControlCliente implements ActionListener, Runnable {
     private Thread hilo;
     private String IDserver;
     public boolean connected;
-    private final Socket socket;
+    private Socket socket;
     File file;
 
     JFrame v;
@@ -169,15 +169,30 @@ public class ControlCliente implements ActionListener, Runnable {
             db.changestatus(this.IDserver, false);
             //zona de desconexion--------------------------------------------------------------------------
             if(error){
+                while (error) {
+                    try {
+                        Thread.sleep(5000);  // esperar antes de intentar reconectar
+                        panel.addTexto("Intentando reconectar...\n", false, false, false, Color.BLACK);
 
-                panel.addTexto("Desconxión detectada, los mensajes se guardarán en local\n",true,false,false,Color.RED);
-                //intentar reconectar
-                while(error){
-                    panel.addTexto("Intentando reconectar\n",false,false,false,Color.BLACK);
-                    dataInput = new DataInputStream(socket.getInputStream());
-                    dataOutput = new DataOutputStream(socket.getOutputStream());
-                    //System.out.println("*#red#Desconxión detectada, los mensajes se guardarán en local");
-                    Thread.sleep(2000);
+                        // intenta reconectar el socket
+                        this.socket = new Socket("34.31.215.146", 80);
+                        dataInput = new DataInputStream(socket.getInputStream());
+                        dataOutput = new DataOutputStream(socket.getOutputStream());
+                        connected = true;  // Marca como reconectado
+                        error = false;  // Salir del ciclo de reconexión
+
+                        // Reiniciar el hilo
+                        if (hilo != null && hilo.isAlive()) {
+                            hilo.interrupt(); // Asegurarse de que el hilo anterior se interrumpa
+                        }
+                        hilo = new Thread(this);
+                        hilo.start();
+
+                        panel.addTexto("Reconexión exitosa\n", true, false, false, Color.GREEN);
+                    } catch (IOException e) {
+                        // si falla mostrar mensaje y continuar el ciclo
+                        panel.addTexto("Reconexión fallida. Reintentando...\n", false, false, false, Color.RED);
+                    }
                 }
 
             }

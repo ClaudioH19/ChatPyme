@@ -37,6 +37,7 @@ public class UsuarioHandler {
                     return;
                 }
 
+
                 for (HiloDeCliente h: HiloDeCliente.conectados){
                     if(h.correo.equals(correo)){
                         this.h.reenviarAlmismosocket("#red#Usuario ya se encuentra en línea");

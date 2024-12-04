@@ -25,12 +25,18 @@ public class ServidorChat {
     
     public ServidorChat() {
             int port=80;
+
         try {
             ServerSocket socketServidor = new ServerSocket(port);
             HiloDeCliente.conectados = new ArrayList();
             HiloDeCliente.groups = new ArrayList<ArrayList>();
             HiloDeCliente.historial= new ArrayList();
             System.out.println("SERVIDOR ACTIVO EN PUERTO: "+port);
+
+            //clock
+            Clock clock = new Clock();
+            clock.start();
+
             while (running) {
                 Socket cliente = socketServidor.accept();
 
@@ -45,9 +51,7 @@ public class ServidorChat {
                 // Inicia el hilo antes de asignar su ID
                 hilo.start();
 
-                //clock
-                Clock clock = new Clock();
-                clock.start();
+
 
 
                 //System.out.println("ENVIANDO: "+String.valueOf(hilo.getName()));
