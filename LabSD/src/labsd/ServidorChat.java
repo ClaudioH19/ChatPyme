@@ -7,7 +7,6 @@ import java.net.Socket;
 import java.util.ArrayList;
 import javax.swing.DefaultListModel;
 
-
 public class ServidorChat {
 
     private DefaultListModel mensajes = new DefaultListModel();
@@ -16,9 +15,10 @@ public class ServidorChat {
 
 
     int usuarios = 0;
-
+    static boolean running = true;
     public static void main(String[] args) {
         new ServidorChat();
+
     }
 
     
@@ -31,7 +31,7 @@ public class ServidorChat {
             HiloDeCliente.groups = new ArrayList<ArrayList>();
             HiloDeCliente.historial= new ArrayList();
             System.out.println("SERVIDOR ACTIVO EN PUERTO: "+port);
-            while (true) {
+            while (running) {
                 Socket cliente = socketServidor.accept();
 
                 // Crea un nuevo objeto HiloDeCliente
@@ -53,14 +53,13 @@ public class ServidorChat {
                 //System.out.println("ENVIANDO: "+String.valueOf(hilo.getName()));
                 //salida.writeUTF(hilo.getName()); // Enviar el ID único al cliente conectado
 
-
-        }
-
+            }
             }catch (Exception e) {
             e.printStackTrace();
         }
 
-        }
+
+    }
 
     
 

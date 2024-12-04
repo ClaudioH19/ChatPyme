@@ -33,6 +33,7 @@ public class ControlCliente implements ActionListener, Runnable {
     File file;
 
     JFrame v;
+    Basededatos db = new Basededatos();
 
     public ArrayList<String> msg_noenviados = new ArrayList<String>();
 
@@ -72,6 +73,7 @@ public class ControlCliente implements ActionListener, Runnable {
 
     public void saveText(File file, String msg) throws IOException {
         System.out.println("A GUARDAR: "+msg);
+        panel.addTexto(msg+"\n",false,false,false,Color.BLACK);
         try (FileWriter writer = new FileWriter(file, true)) {
             writer.write(msg + System.lineSeparator());
             System.out.println("Mensaje guardado");
@@ -97,6 +99,18 @@ public class ControlCliente implements ActionListener, Runnable {
     }
 
 
+    public void mostrarMensajes(String mensaje){
+        String[] textsplitted=mensaje.split(" ");
+        for (int i=0; i<textsplitted.length; i++) {
+            if (textsplitted[i].equals("/msgs")) {
+                ArrayList<String> mensajes = db.getmensajes(textsplitted[i + 1]);
+                for (String s : mensajes) {
+                    panel.addTexto(s+"\n",false,false,false,Color.BLACK);
+                }
+            }
+        }
+    }
+
     @Override
     public void actionPerformed(ActionEvent evento) {
         String mensaje=IDserver + " " + panel.getTexto()+" ";
@@ -104,6 +118,8 @@ public class ControlCliente implements ActionListener, Runnable {
             dataOutput.writeUTF(mensaje);
         } catch (Exception excepcion) {
             try {
+                mostrarMensajes(mensaje);
+
                 System.out.println("MENSAJE: "+mensaje);
                 saveText(file,mensaje);
             } catch (IOException e) {
@@ -141,64 +157,25 @@ public class ControlCliente implements ActionListener, Runnable {
                         throw new RuntimeException(e);
                     }
                 }
-                else{
-                    boolean underline=false;
-                    boolean bold=false;
-                    boolean italic=false;
-                    Color color= Color.BLACK;
-                    //parsear texto
-                    for (int i = 0; i < texto.length(); i++) {
-                        String hex="";
-                        if(texto.charAt(i)=='_'){
-                            underline=!underline;
-                        }
-
-
-                        if(texto.charAt(i)=='*'){
-                            bold=!bold;
-                        }
-
-
-                        if(texto.charAt(i)=='~'){
-                            italic=!italic;
-                        }
-
-                        if (texto.charAt(i) == '#') {
-                            String aux = "";
-                            for (i = i + 1; i < texto.length() && texto.charAt(i) != '#'; i++) {
-                                aux += texto.charAt(i);
-                            }
-                            if (i < texto.length() - 1)
-                                i += 1;
-
-                            try {
-                                Field field = Color.class.getField(aux.toUpperCase());
-                                color = (Color) field.get(null);
-                            } catch (NoSuchFieldException | IllegalAccessException e) {
-                                // Si el campo no existe, asignamos un color predeterminado (ej. negro)
-                                System.err.println("Color no reconocido: " + aux + ". Se usará el color por defecto (negro).");
-                                color = Color.BLACK;
-                            }
-                        }
-
-                        // Convertir el color a su valor hexadecimal
-                        hex = String.format("#%06X", color.getRGB() & 0xFFFFFF);
-                        color = Color.decode(hex);
-                        if( (texto.charAt(i)!='*') && (texto.charAt(i)!='~') && (texto.charAt(i)!='_'))
-                            panel.addTexto(texto.charAt(i)+"",bold,italic,underline,color);
-
-                    }
+                else {
+                    parsearTexto(texto);
 
                 }
 
                 panel.addTexto("\n",false,false,false, Color.BLACK);
             }
 
-            //zona de desconexion
+            //desconectar
+            db.changestatus(this.IDserver, false);
+            //zona de desconexion--------------------------------------------------------------------------
             if(error){
+
+                panel.addTexto("Desconxión detectada, los mensajes se guardarán en local\n",true,false,false,Color.RED);
                 //intentar reconectar
                 while(error){
-                    panel.addTexto("Desconxión detectada, los mensajes se guardarán en local\n",true,false,false,Color.RED);
+                    panel.addTexto("Intentando reconectar\n",false,false,false,Color.BLACK);
+                    dataInput = new DataInputStream(socket.getInputStream());
+                    dataOutput = new DataOutputStream(socket.getOutputStream());
                     //System.out.println("*#red#Desconxión detectada, los mensajes se guardarán en local");
                     Thread.sleep(2000);
                 }
@@ -211,6 +188,61 @@ public class ControlCliente implements ActionListener, Runnable {
             Thread.interrupted();
         }
     }
+
+
+
+
+    public void parsearTexto(String texto) throws IOException {
+        boolean underline=false;
+        boolean bold=false;
+        boolean italic=false;
+        Color color= Color.BLACK;
+        //parsear texto
+        for (int i = 0; i < texto.length(); i++) {
+            String hex="";
+            if(texto.charAt(i)=='_'){
+                underline=!underline;
+            }
+
+
+            if(texto.charAt(i)=='*'){
+                bold=!bold;
+            }
+
+
+            if(texto.charAt(i)=='~'){
+                italic=!italic;
+            }
+
+            if (texto.charAt(i) == '#') {
+                String aux = "";
+                for (i = i + 1; i < texto.length() && texto.charAt(i) != '#'; i++) {
+                    aux += texto.charAt(i);
+                }
+                if (i < texto.length() - 1)
+                    i += 1;
+
+                try {
+                    Field field = Color.class.getField(aux.toUpperCase());
+                    color = (Color) field.get(null);
+                } catch (NoSuchFieldException | IllegalAccessException e) {
+                    // Si el campo no existe, asignamos un color predeterminado (ej. negro)
+                    System.err.println("Color no reconocido: " + aux + ". Se usará el color por defecto (negro).");
+                    color = Color.BLACK;
+                }
+            }
+
+            // Convertir el color a su valor hexadecimal
+            hex = String.format("#%06X", color.getRGB() & 0xFFFFFF);
+            color = Color.decode(hex);
+            if( (texto.charAt(i)!='*') && (texto.charAt(i)!='~') && (texto.charAt(i)!='_'))
+                panel.addTexto(texto.charAt(i)+"",bold,italic,underline,color);
+            }
+    }
+
+
+
+
 
     private void creaYVisualizaVentana() {
         v = new JFrame();

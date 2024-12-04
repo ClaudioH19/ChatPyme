@@ -5,34 +5,13 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="33d02799-9423-44ae-99e1-e66e860f734f" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/LabSD/build/classes/labsd/Basededatos.class" beforeDir="false" afterPath="$PROJECT_DIR$/LabSD/build/classes/labsd/Basededatos.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/LabSD/build/classes/labsd/ClienteChat.class" beforeDir="false" afterPath="$PROJECT_DIR$/LabSD/build/classes/labsd/ClienteChat.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/LabSD/build/classes/labsd/ControlCliente$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/LabSD/build/classes/labsd/ControlCliente$1.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/LabSD/build/classes/labsd/ControlCliente.class" beforeDir="false" afterPath="$PROJECT_DIR$/LabSD/build/classes/labsd/ControlCliente.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/LabSD/build/classes/labsd/HiloDeCliente.class" beforeDir="false" afterPath="$PROJECT_DIR$/LabSD/build/classes/labsd/HiloDeCliente.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/LabSD/build/classes/labsd/PanelCliente$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/LabSD/build/classes/labsd/PanelCliente$1.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/LabSD/build/classes/labsd/PanelCliente.class" beforeDir="false" afterPath="$PROJECT_DIR$/LabSD/build/classes/labsd/PanelCliente.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/LabSD/build/classes/labsd/ServidorChat.class" beforeDir="false" afterPath="$PROJECT_DIR$/LabSD/build/classes/labsd/ServidorChat.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/LabSD/src/labsd/ClienteChat.java" beforeDir="false" afterPath="$PROJECT_DIR$/LabSD/src/labsd/ClienteChat.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/LabSD/src/labsd/Clock.java" beforeDir="false" afterPath="$PROJECT_DIR$/LabSD/src/labsd/Clock.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/LabSD/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/LabSD/pom.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/LabSD/src/labsd/ControlCliente.java" beforeDir="false" afterPath="$PROJECT_DIR$/LabSD/src/labsd/ControlCliente.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/LabSD/src/labsd/MensajePrivadoHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/LabSD/src/labsd/MensajePrivadoHandler.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/LabSD/src/labsd/UsuarioHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/LabSD/src/labsd/UsuarioHandler.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/labsd/Basededatos.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/labsd/Basededatos.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/labsd/ClienteChat.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/labsd/ClienteChat.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/labsd/Clock.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/labsd/Clock.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/LabSD/src/labsd/ServidorChat.java" beforeDir="false" afterPath="$PROJECT_DIR$/LabSD/src/labsd/ServidorChat.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/classes/labsd/ControlCliente$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/labsd/ControlCliente$1.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/classes/labsd/ControlCliente.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/labsd/ControlCliente.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/labsd/GrupoHandler.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/labsd/GrupoHandler.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/labsd/HiloDeCliente.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/labsd/HiloDeCliente.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/labsd/MensajePrivadoHandler.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/labsd/MensajePrivadoHandler.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/labsd/PanelCliente$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/labsd/PanelCliente$1.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/labsd/PanelCliente.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/labsd/PanelCliente.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/classes/labsd/ServidorChat.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/labsd/ServidorChat.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/labsd/SistemaHandler.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/labsd/SistemaHandler.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/labsd/UsuarioHandler.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/labsd/UsuarioHandler.class" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -57,22 +36,22 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "Application.ClienteChat.executor": "Run",
-    "Application.ServidorChat.executor": "Run",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "git-widget-placeholder": "master",
-    "kotlin-language-version-configured": "true",
-    "last_opened_file_path": "C:/Users/claud/Desktop/Proyecto sd/ChatPyme",
-    "node.js.detected.package.eslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs_package_manager_path": "npm",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;Application.ClienteChat.executor&quot;: &quot;Run&quot;,
+    &quot;Application.ServidorChat.executor&quot;: &quot;Run&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;master&quot;,
+    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
+    &quot;last_opened_file_path&quot;: &quot;C:/Users/claud/Desktop/Proyecto sd/ChatPyme&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
-}]]></component>
-  <component name="RunManager">
+}</component>
+  <component name="RunManager" selected="Application.ClienteChat">
     <configuration name="ClienteChat" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="labsd.ClienteChat" />
       <module name="mi-proyecto" />
@@ -123,7 +102,9 @@
       <option name="presentableId" value="Default" />
       <updated>1730643221719</updated>
       <workItem from="1730643223605" duration="1237000" />
-      <workItem from="1733163427710" duration="17440000" />
+      <workItem from="1733163427710" duration="17620000" />
+      <workItem from="1733238674643" duration="8584000" />
+      <workItem from="1733262565361" duration="6316000" />
     </task>
     <servers />
   </component>

@@ -18,6 +18,18 @@
             <artifactId>jedis</artifactId>
             <version>4.3.0</version>
         </dependency>
-
     </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>exec-maven-plugin</artifactId>
+                <version>3.1.0</version>
+                <configuration>
+                    <mainClass>labsd.ServidorChat</mainClass>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
 </project>
