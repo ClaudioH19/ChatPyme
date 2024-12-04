@@ -7,12 +7,14 @@
     <version>1.0-SNAPSHOT</version>
 
     <dependencies>
+        <!-- MongoDB Driver -->
         <dependency>
             <groupId>org.mongodb</groupId>
             <artifactId>mongodb-driver-sync</artifactId>
             <version>5.2.0</version>
         </dependency>
 
+        <!-- Redis Jedis Client -->
         <dependency>
             <groupId>redis.clients</groupId>
             <artifactId>jedis</artifactId>
@@ -23,6 +25,18 @@
     <build>
         <sourceDirectory>src</sourceDirectory>
         <plugins>
+            <!-- Maven Compiler Plugin -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.8.1</version>
+                <configuration>
+                    <source>11</source> <!-- Versión de Java para el código fuente -->
+                    <target>11</target> <!-- Versión de Java para el bytecode -->
+                </configuration>
+            </plugin>
+
+            <!-- Maven Exec Plugin -->
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>exec-maven-plugin</artifactId>
@@ -33,4 +47,9 @@
             </plugin>
         </plugins>
     </build>
+
+    <properties>
+        <maven.compiler.source>11</maven.compiler.source>
+        <maven.compiler.target>11</maven.compiler.target>
+    </properties>
 </project>
