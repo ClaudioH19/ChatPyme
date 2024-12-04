@@ -157,7 +157,7 @@ public class SistemaHandler {
         for (int i = 0; i < HiloDeCliente.conectados.size(); i++) {
             HiloDeCliente cliente = HiloDeCliente.conectados.get(i);
             cliente.reenviarAlmismosocket("#magenta#\n---------------------\n#red#" + this.h.nombre + " is disconnected\n---------------------");
-            if (cliente.idserver.equals(origin)) {
+            if (cliente.idserver.equals(origin) || cliente.correo.equals(origin)) {
                 cliente.connected = false;
                 HiloDeCliente.conectados.remove(i);
                 break;
