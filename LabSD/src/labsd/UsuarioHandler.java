@@ -37,7 +37,7 @@ public class UsuarioHandler {
                     return;
                 }
 
-                int rem=0;
+                int rem=-1;
                 int idx=0;
                 for (HiloDeCliente h: HiloDeCliente.conectados){
                     if(h.correo.equals(correo) && h.db.readstatus(correo)){
@@ -47,7 +47,7 @@ public class UsuarioHandler {
                     }
                     idx++;
                 }
-                if(HiloDeCliente.conectados.size()>0)
+                if(rem>=0 && !HiloDeCliente.conectados.isEmpty())
                     HiloDeCliente.conectados.remove(rem);
 
                 h.nombre = user[0][1];
