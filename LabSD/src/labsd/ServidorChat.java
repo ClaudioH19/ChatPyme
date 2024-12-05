@@ -37,6 +37,9 @@ public class ServidorChat {
             Clock clock = new Clock();
             clock.start();
 
+            Cache cache = new Cache();
+            cache.start();
+
             while (running) {
                 Socket cliente = socketServidor.accept();
 

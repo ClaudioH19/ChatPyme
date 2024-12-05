@@ -17,10 +17,14 @@ public class Clock extends Thread{
 
         while(true) {
 
+            //se encarga de dar concordancia al estado en el server y en la base de datos
             Basededatos db = new Basededatos();
-            ArrayList<String[][]> users = db.getallusers();
-
-
+            try {
+                ArrayList<String[][]> users = db.getallusers();
+            }
+            catch(MongoException e) {
+                e.printStackTrace();
+            }
             int idx=0;
             for (HiloDeCliente h : HiloDeCliente.conectados){
                 try {
@@ -29,11 +33,12 @@ public class Clock extends Thread{
                 }catch(MongoException e) {
                     e.printStackTrace();
                 }
+
                 idx++;
             }
 
             try {
-                Thread.sleep(2000);
+                Thread.sleep(10000);
             } catch (InterruptedException e) {
                 throw new RuntimeException(e);
             }
