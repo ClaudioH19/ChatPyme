@@ -170,10 +170,14 @@ public class ControlCliente implements ActionListener, Runnable {
             //zona de desconexion--------------------------------------------------------------------------
             if(error){
                 new Thread(() -> {
+                    int intento=0;
                     while (error) {
+                        if(intento>3)
+                            break;
+                        intento++;
                         try {
                             Thread.sleep(5000);  // esperar antes de intentar reconectar
-                            SwingUtilities.invokeLater(() -> panel.addTexto("Intentando reconectar...\n", false, false, false, Color.BLACK));
+                            SwingUtilities.invokeLater(() -> panel.addTexto("Intentando reconectar... \n"+intento+"/3", false, false, false, Color.BLACK));
 
                             // intenta reconectar el socket
                             this.socket = new Socket("34.31.215.146", 80);
