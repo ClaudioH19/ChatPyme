@@ -30,7 +30,7 @@ public class ControlCliente implements ActionListener, Runnable {
     private String IDserver;
     public boolean connected;
     private Socket socket;
-    private volatile boolean error=false;
+    private boolean error=false;
     File file;
 
     JFrame v;
@@ -120,7 +120,6 @@ public class ControlCliente implements ActionListener, Runnable {
         } catch (Exception excepcion) {
             try {
                 mostrarMensajes(mensaje);
-
                 System.out.println("MENSAJE: "+mensaje);
                 saveText(file,mensaje);
             } catch (IOException e) {
@@ -143,7 +142,7 @@ public class ControlCliente implements ActionListener, Runnable {
                 } catch (IOException excepcion) {
                     connected = false;  // Marca como desconectado para intentar reconectar
                     error=true;
-                    panel.addTexto("Se ha perdido la conexión, cierre la aplicación y vuelva a abrir para reintentar. Los mensajes quedarán en forma local\n",false,false,false,Color.RED);
+                    panel.addTexto("Se ha perdido la conexión, cierre la aplicación o espere reconexión. Los mensajes quedarán en forma local\n",false,false,false,Color.RED);
                     db.changestatus(this.IDserver, false);
                 }
 
@@ -169,40 +168,40 @@ public class ControlCliente implements ActionListener, Runnable {
 
             //zona de desconexion--------------------------------------------------------------------------
             if(error){
-                new Thread(() -> {
-                    int intento=0;
-                    while (error) {
-                        if(intento>3)
-                            break;
-                        intento++;
-                        try {
-                            Thread.sleep(5000);  // esperar antes de intentar reconectar
-                            int finalIntento = intento;
-                            SwingUtilities.invokeLater(() -> panel.addTexto("Intentando reconectar... \n"+ finalIntento +"/3", false, false, false, Color.BLACK));
 
-                            // intenta reconectar el socket
-                            this.socket = new Socket("34.31.215.146", 80);
-                            dataInput = new DataInputStream(socket.getInputStream());
-                            dataOutput = new DataOutputStream(socket.getOutputStream());
-                            connected = true;  // Marca como reconectado
-                            error = false;  // Salir del ciclo de reconexión
+                int intento=0;
+                while (error) {
+                    if(intento>3)
+                        break;
+                    intento++;
+                    try {
+                        Thread.sleep(5000);  // esperar antes de intentar reconectar
+                        int finalIntento = intento;
+                        SwingUtilities.invokeLater(() -> panel.addTexto("Intentando reconectar... "+ finalIntento +"/3 \n", false, false, false, Color.RED));
 
-                            // Reiniciar el hilo
-                            if (hilo != null && hilo.isAlive()) {
-                                hilo.interrupt(); // Asegurarse de que el hilo anterior se interrumpa
-                            }
-                            hilo = new Thread(this);
-                            hilo.start();
+                        // intenta reconectar el socket
+                        this.socket = new Socket("34.31.215.146", 80);
+                        dataInput = new DataInputStream(socket.getInputStream());
+                        dataOutput = new DataOutputStream(socket.getOutputStream());
+                        connected = true;  // Marca como reconectado
+                        error = false;  // Salir del ciclo de reconexión
 
-                            SwingUtilities.invokeLater(() -> panel.addTexto("Reconexión exitosa\n", true, false, false, Color.GREEN));
-                        } catch (IOException e) {
-                            // si falla mostrar mensaje y continuar el ciclo
-                            SwingUtilities.invokeLater(() -> panel.addTexto("Reconexión fallida. Reintentando...\n", false, false, false, Color.RED));
-                        } catch (InterruptedException e) {
-                            Thread.currentThread().interrupt(); // Manejar la interrupción del hilo
+                        // Reiniciar el hilo
+                        if (hilo != null && hilo.isAlive()) {
+                            hilo.interrupt(); // Asegurarse de que el hilo anterior se interrumpa
                         }
+                        hilo = new Thread(this);
+                        hilo.start();
+
+                        SwingUtilities.invokeLater(() -> panel.addTexto("Reconexión exitosa\n", true, false, false, Color.GREEN));
+                    } catch (IOException e) {
+                        // si falla mostrar mensaje y continuar el ciclo
+                        SwingUtilities.invokeLater(() -> panel.addTexto("Reconexión fallida. Reintentando...\n", false, false, false, Color.RED));
+                    } catch (InterruptedException e) {
+                        Thread.currentThread().interrupt(); // Manejar la interrupción del hilo
                     }
-                }).start();
+                }
+
 
             }
 
