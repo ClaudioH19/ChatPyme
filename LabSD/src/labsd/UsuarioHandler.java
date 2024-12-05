@@ -43,7 +43,7 @@ public class UsuarioHandler {
                     if(h.correo.equals(correo) && h.db.readstatus(correo)){
                         //this.h.reenviarAlmismosocket("#red#Usuario ya se encuentra en línea");
                         //return;
-                        rem=idx++;
+                        rem=idx;
                     }
                     idx++;
                 }
