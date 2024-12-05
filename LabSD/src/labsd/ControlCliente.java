@@ -32,6 +32,7 @@ public class ControlCliente implements ActionListener, Runnable {
     private Socket socket;
     private boolean error=false;
     File file;
+    int intento=0;
 
     JFrame v;
     Basededatos db = new Basededatos();
@@ -132,7 +133,6 @@ public class ControlCliente implements ActionListener, Runnable {
     @Override
     public void run() {
 
-
         try {
             while (connected) {
                 String texto="";
@@ -169,15 +169,16 @@ public class ControlCliente implements ActionListener, Runnable {
             //zona de desconexion--------------------------------------------------------------------------
             if(error){
 
-                int intento=0;
+
                 while (error) {
-                    if(intento>3)
+                    if(intento>3){
+                        error=false;
                         break;
-                    intento++;
+                    }
                     try {
-                        Thread.sleep(5000);  // esperar antes de intentar reconectar
-                        int finalIntento = intento;
-                        SwingUtilities.invokeLater(() -> panel.addTexto("Intentando reconectar... "+ finalIntento +"/3 \n", false, false, false, Color.RED));
+                        Thread.sleep(3000);  // esperar antes de intentar reconectar
+
+                        panel.addTexto("Intentando reconectar... "+ intento++ +"/3 \n", false, false, false, Color.RED);
 
                         // intenta reconectar el socket
                         this.socket = new Socket("34.31.215.146", 80);
@@ -187,9 +188,6 @@ public class ControlCliente implements ActionListener, Runnable {
                         error = false;  // Salir del ciclo de reconexión
 
                         // Reiniciar el hilo
-                        if (hilo != null && hilo.isAlive()) {
-                            hilo.interrupt(); // Asegurarse de que el hilo anterior se interrumpa
-                        }
                         hilo = new Thread(this);
                         hilo.start();
 
