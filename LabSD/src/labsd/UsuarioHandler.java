@@ -47,7 +47,8 @@ public class UsuarioHandler {
                     }
                     idx++;
                 }
-                HiloDeCliente.conectados.remove(rem);
+                if(HiloDeCliente.conectados.size()>0)
+                    HiloDeCliente.conectados.remove(rem);
 
                 h.nombre = user[0][1];
                 h.correo = user[1][1];
