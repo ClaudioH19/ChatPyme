@@ -177,7 +177,8 @@ public class ControlCliente implements ActionListener, Runnable {
                         intento++;
                         try {
                             Thread.sleep(5000);  // esperar antes de intentar reconectar
-                            SwingUtilities.invokeLater(() -> panel.addTexto("Intentando reconectar... \n"+intento+"/3", false, false, false, Color.BLACK));
+                            int finalIntento = intento;
+                            SwingUtilities.invokeLater(() -> panel.addTexto("Intentando reconectar... \n"+ finalIntento +"/3", false, false, false, Color.BLACK));
 
                             // intenta reconectar el socket
                             this.socket = new Socket("34.31.215.146", 80);
