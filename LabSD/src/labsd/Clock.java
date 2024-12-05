@@ -15,26 +15,19 @@ public class Clock extends Thread{
     @Override
     public void run(){
 
-        while(true) {
-
-            //se encarga de dar concordancia al estado en el server y en la base de datos
+        while (true) {
             Basededatos db = new Basededatos();
-            try {
-                ArrayList<String[][]> users = db.getallusers();
-            }
-            catch(MongoException e) {
-                e.printStackTrace();
-            }
-            int idx=0;
-            for (HiloDeCliente h : HiloDeCliente.conectados){
+            Iterator<HiloDeCliente> iterator = HiloDeCliente.conectados.iterator();
+
+            while (iterator.hasNext()) {
+                HiloDeCliente h = iterator.next();
                 try {
-                    if (!db.readstatus(h.correo))
-                        HiloDeCliente.conectados.remove(idx);
-                }catch(MongoException e) {
+                    if (!db.readstatus(h.correo)) {
+                        iterator.remove();
+                    }
+                } catch (MongoException e) {
                     e.printStackTrace();
                 }
-
-                idx++;
             }
 
             try {

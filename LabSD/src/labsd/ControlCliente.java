@@ -165,10 +165,10 @@ public class ControlCliente implements ActionListener, Runnable {
                 panel.addTexto("\n",false,false,false, Color.BLACK);
             }
 
-            //desconectar
-            db.changestatus(this.IDserver, false);
             //zona de desconexion--------------------------------------------------------------------------
             if(error){
+                //desconectar
+                db.changestatus(this.IDserver, false);
                 while (error) {
                     try {
                         Thread.sleep(5000);  // esperar antes de intentar reconectar

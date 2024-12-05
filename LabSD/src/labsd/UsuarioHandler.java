@@ -39,7 +39,7 @@ public class UsuarioHandler {
 
 
                 for (HiloDeCliente h: HiloDeCliente.conectados){
-                    if(h.correo.equals(correo)){
+                    if(h.correo.equals(correo) && h.db.readstatus(correo)){
                         this.h.reenviarAlmismosocket("#red#Usuario ya se encuentra en línea");
                         return;
                     }
