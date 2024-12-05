@@ -142,7 +142,8 @@ public class ControlCliente implements ActionListener, Runnable {
                 } catch (IOException excepcion) {
                     connected = false;  // Marca como desconectado para intentar reconectar
                     error=true;
-                    //texto="*#red#Se ha perdido la conexión, cierre y vuelva a intentar";
+                    panel.addTexto("Se ha perdido la conexión, cierre la aplicación y vuelva a abrir para reintentar. Los mensajes quedarán en forma local\n",false,false,false,Color.RED);
+                    db.changestatus(this.IDserver, false);
                 }
 
                 if(texto.contains("/loggedsucceed")) { //esta es la bandera enviada que reporta un logueo

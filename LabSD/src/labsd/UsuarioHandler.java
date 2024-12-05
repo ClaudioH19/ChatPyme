@@ -37,13 +37,17 @@ public class UsuarioHandler {
                     return;
                 }
 
-
+                int rem=0;
+                int idx=0;
                 for (HiloDeCliente h: HiloDeCliente.conectados){
                     if(h.correo.equals(correo) && h.db.readstatus(correo)){
-                        this.h.reenviarAlmismosocket("#red#Usuario ya se encuentra en línea");
-                        return;
+                        //this.h.reenviarAlmismosocket("#red#Usuario ya se encuentra en línea");
+                        //return;
+                        rem=idx++;
                     }
+                    idx++;
                 }
+                HiloDeCliente.conectados.remove(rem);
 
                 h.nombre = user[0][1];
                 h.correo = user[1][1];
